@@ -1,0 +1,1110 @@
+{
+  "analytic_scope": "Symmetric seven-point triangular star; arbitrary stars remain open",
+  "interval_certificates": [
+    {
+      "bits": 128,
+      "boxes": 214,
+      "maximum_depth": 13,
+      "certified_statement": "q * antisymmetric_product_second_derivative > 1/100 on 0 <= s <= 1",
+      "endpoint_interpretation": "continuous scaled extension at s=0 and s=1",
+      "exact_partition_verified": true,
+      "smallest_box_lower_endpoint": "[0.010379228739103218089429194315108869443 +/- 3.93e-40]"
+    },
+    {
+      "bits": 256,
+      "boxes": 214,
+      "maximum_depth": 13,
+      "certified_statement": "q * antisymmetric_product_second_derivative > 1/100 on 0 <= s <= 1",
+      "endpoint_interpretation": "continuous scaled extension at s=0 and s=1",
+      "exact_partition_verified": true,
+      "smallest_box_lower_endpoint": "[0.01037922885551853991636400876823386946035932054589487007370991181577005622837 +/- 3.12e-78]"
+    }
+  ],
+  "dyadic_boxes": [
+    [
+      8191,
+      13
+    ],
+    [
+      8190,
+      13
+    ],
+    [
+      4094,
+      12
+    ],
+    [
+      2046,
+      11
+    ],
+    [
+      2045,
+      11
+    ],
+    [
+      2044,
+      11
+    ],
+    [
+      1021,
+      10
+    ],
+    [
+      1020,
+      10
+    ],
+    [
+      1019,
+      10
+    ],
+    [
+      1018,
+      10
+    ],
+    [
+      1017,
+      10
+    ],
+    [
+      1016,
+      10
+    ],
+    [
+      1015,
+      10
+    ],
+    [
+      1014,
+      10
+    ],
+    [
+      1013,
+      10
+    ],
+    [
+      1012,
+      10
+    ],
+    [
+      1011,
+      10
+    ],
+    [
+      1010,
+      10
+    ],
+    [
+      504,
+      9
+    ],
+    [
+      503,
+      9
+    ],
+    [
+      502,
+      9
+    ],
+    [
+      501,
+      9
+    ],
+    [
+      500,
+      9
+    ],
+    [
+      499,
+      9
+    ],
+    [
+      498,
+      9
+    ],
+    [
+      497,
+      9
+    ],
+    [
+      496,
+      9
+    ],
+    [
+      495,
+      9
+    ],
+    [
+      494,
+      9
+    ],
+    [
+      493,
+      9
+    ],
+    [
+      492,
+      9
+    ],
+    [
+      491,
+      9
+    ],
+    [
+      490,
+      9
+    ],
+    [
+      489,
+      9
+    ],
+    [
+      488,
+      9
+    ],
+    [
+      487,
+      9
+    ],
+    [
+      486,
+      9
+    ],
+    [
+      485,
+      9
+    ],
+    [
+      484,
+      9
+    ],
+    [
+      483,
+      9
+    ],
+    [
+      482,
+      9
+    ],
+    [
+      481,
+      9
+    ],
+    [
+      480,
+      9
+    ],
+    [
+      479,
+      9
+    ],
+    [
+      478,
+      9
+    ],
+    [
+      477,
+      9
+    ],
+    [
+      476,
+      9
+    ],
+    [
+      475,
+      9
+    ],
+    [
+      474,
+      9
+    ],
+    [
+      473,
+      9
+    ],
+    [
+      472,
+      9
+    ],
+    [
+      471,
+      9
+    ],
+    [
+      470,
+      9
+    ],
+    [
+      469,
+      9
+    ],
+    [
+      468,
+      9
+    ],
+    [
+      467,
+      9
+    ],
+    [
+      466,
+      9
+    ],
+    [
+      465,
+      9
+    ],
+    [
+      464,
+      9
+    ],
+    [
+      463,
+      9
+    ],
+    [
+      462,
+      9
+    ],
+    [
+      461,
+      9
+    ],
+    [
+      460,
+      9
+    ],
+    [
+      459,
+      9
+    ],
+    [
+      458,
+      9
+    ],
+    [
+      457,
+      9
+    ],
+    [
+      456,
+      9
+    ],
+    [
+      455,
+      9
+    ],
+    [
+      454,
+      9
+    ],
+    [
+      453,
+      9
+    ],
+    [
+      452,
+      9
+    ],
+    [
+      451,
+      9
+    ],
+    [
+      450,
+      9
+    ],
+    [
+      449,
+      9
+    ],
+    [
+      448,
+      9
+    ],
+    [
+      447,
+      9
+    ],
+    [
+      446,
+      9
+    ],
+    [
+      445,
+      9
+    ],
+    [
+      444,
+      9
+    ],
+    [
+      221,
+      8
+    ],
+    [
+      220,
+      8
+    ],
+    [
+      219,
+      8
+    ],
+    [
+      218,
+      8
+    ],
+    [
+      217,
+      8
+    ],
+    [
+      216,
+      8
+    ],
+    [
+      215,
+      8
+    ],
+    [
+      214,
+      8
+    ],
+    [
+      213,
+      8
+    ],
+    [
+      212,
+      8
+    ],
+    [
+      211,
+      8
+    ],
+    [
+      210,
+      8
+    ],
+    [
+      209,
+      8
+    ],
+    [
+      208,
+      8
+    ],
+    [
+      207,
+      8
+    ],
+    [
+      206,
+      8
+    ],
+    [
+      205,
+      8
+    ],
+    [
+      204,
+      8
+    ],
+    [
+      203,
+      8
+    ],
+    [
+      202,
+      8
+    ],
+    [
+      201,
+      8
+    ],
+    [
+      200,
+      8
+    ],
+    [
+      199,
+      8
+    ],
+    [
+      198,
+      8
+    ],
+    [
+      197,
+      8
+    ],
+    [
+      196,
+      8
+    ],
+    [
+      195,
+      8
+    ],
+    [
+      194,
+      8
+    ],
+    [
+      193,
+      8
+    ],
+    [
+      192,
+      8
+    ],
+    [
+      191,
+      8
+    ],
+    [
+      190,
+      8
+    ],
+    [
+      189,
+      8
+    ],
+    [
+      188,
+      8
+    ],
+    [
+      187,
+      8
+    ],
+    [
+      186,
+      8
+    ],
+    [
+      185,
+      8
+    ],
+    [
+      184,
+      8
+    ],
+    [
+      183,
+      8
+    ],
+    [
+      182,
+      8
+    ],
+    [
+      181,
+      8
+    ],
+    [
+      180,
+      8
+    ],
+    [
+      179,
+      8
+    ],
+    [
+      178,
+      8
+    ],
+    [
+      177,
+      8
+    ],
+    [
+      176,
+      8
+    ],
+    [
+      175,
+      8
+    ],
+    [
+      174,
+      8
+    ],
+    [
+      173,
+      8
+    ],
+    [
+      172,
+      8
+    ],
+    [
+      171,
+      8
+    ],
+    [
+      170,
+      8
+    ],
+    [
+      169,
+      8
+    ],
+    [
+      168,
+      8
+    ],
+    [
+      167,
+      8
+    ],
+    [
+      166,
+      8
+    ],
+    [
+      165,
+      8
+    ],
+    [
+      164,
+      8
+    ],
+    [
+      163,
+      8
+    ],
+    [
+      162,
+      8
+    ],
+    [
+      161,
+      8
+    ],
+    [
+      160,
+      8
+    ],
+    [
+      159,
+      8
+    ],
+    [
+      158,
+      8
+    ],
+    [
+      157,
+      8
+    ],
+    [
+      156,
+      8
+    ],
+    [
+      155,
+      8
+    ],
+    [
+      154,
+      8
+    ],
+    [
+      153,
+      8
+    ],
+    [
+      152,
+      8
+    ],
+    [
+      151,
+      8
+    ],
+    [
+      150,
+      8
+    ],
+    [
+      149,
+      8
+    ],
+    [
+      148,
+      8
+    ],
+    [
+      147,
+      8
+    ],
+    [
+      146,
+      8
+    ],
+    [
+      72,
+      7
+    ],
+    [
+      71,
+      7
+    ],
+    [
+      70,
+      7
+    ],
+    [
+      69,
+      7
+    ],
+    [
+      68,
+      7
+    ],
+    [
+      67,
+      7
+    ],
+    [
+      66,
+      7
+    ],
+    [
+      65,
+      7
+    ],
+    [
+      64,
+      7
+    ],
+    [
+      63,
+      7
+    ],
+    [
+      62,
+      7
+    ],
+    [
+      61,
+      7
+    ],
+    [
+      60,
+      7
+    ],
+    [
+      59,
+      7
+    ],
+    [
+      58,
+      7
+    ],
+    [
+      57,
+      7
+    ],
+    [
+      56,
+      7
+    ],
+    [
+      55,
+      7
+    ],
+    [
+      54,
+      7
+    ],
+    [
+      53,
+      7
+    ],
+    [
+      52,
+      7
+    ],
+    [
+      51,
+      7
+    ],
+    [
+      50,
+      7
+    ],
+    [
+      49,
+      7
+    ],
+    [
+      48,
+      7
+    ],
+    [
+      47,
+      7
+    ],
+    [
+      46,
+      7
+    ],
+    [
+      45,
+      7
+    ],
+    [
+      44,
+      7
+    ],
+    [
+      43,
+      7
+    ],
+    [
+      42,
+      7
+    ],
+    [
+      41,
+      7
+    ],
+    [
+      40,
+      7
+    ],
+    [
+      39,
+      7
+    ],
+    [
+      38,
+      7
+    ],
+    [
+      37,
+      7
+    ],
+    [
+      36,
+      7
+    ],
+    [
+      35,
+      7
+    ],
+    [
+      34,
+      7
+    ],
+    [
+      33,
+      7
+    ],
+    [
+      32,
+      7
+    ],
+    [
+      31,
+      7
+    ],
+    [
+      30,
+      7
+    ],
+    [
+      29,
+      7
+    ],
+    [
+      28,
+      7
+    ],
+    [
+      13,
+      6
+    ],
+    [
+      12,
+      6
+    ],
+    [
+      11,
+      6
+    ],
+    [
+      10,
+      6
+    ],
+    [
+      9,
+      6
+    ],
+    [
+      8,
+      6
+    ],
+    [
+      7,
+      6
+    ],
+    [
+      6,
+      6
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      4,
+      6
+    ],
+    [
+      3,
+      6
+    ],
+    [
+      2,
+      6
+    ],
+    [
+      1,
+      6
+    ],
+    [
+      0,
+      6
+    ]
+  ],
+  "independent_geometric_jet_comparison_max_error": 1.942890293094024e-15,
+  "saved_star_checks_classification": "Floating evidence, no optimization and no exhaustive search",
+  "saved_star_count": 11,
+  "saved_stars": [
+    {
+      "file": "n10_g0_critical_0.npy",
+      "root": 7,
+      "moving_neighbors": [
+        4,
+        5,
+        9
+      ],
+      "product": 3.26578429442291,
+      "star_gradient_norm": 4.3287663372774457e-16,
+      "star_hessian_eigenvalues": [
+        0.13031962204084058,
+        0.13031962204084185,
+        2.752795126872079
+      ],
+      "star_hessian_trace": 3.01343437095376,
+      "minimum_local_jacobian_singular": 0.3027932350908328,
+      "first_constraint_jet_residual": 3.0742276872671556e-16,
+      "second_constraint_jet_residual": 1.1499576413505718e-15
+    },
+    {
+      "file": "n7critical_0.npy",
+      "root": 4,
+      "moving_neighbors": [
+        2,
+        5,
+        6
+      ],
+      "product": 3.2751818329615143,
+      "star_gradient_norm": 6.543665692950223e-16,
+      "star_hessian_eigenvalues": [
+        0.17131202480330618,
+        0.17131202480330815,
+        1.2167215916850778
+      ],
+      "star_hessian_trace": 1.5593456412916926,
+      "minimum_local_jacobian_singular": 0.4215665087136,
+      "first_constraint_jet_residual": 1.6218647510742325e-16,
+      "second_constraint_jet_residual": 1.0022799304547519e-15
+    },
+    {
+      "file": "n7moduli_asym_0.npy",
+      "root": 4,
+      "moving_neighbors": [
+        2,
+        5,
+        6
+      ],
+      "product": 3.2984746847796256,
+      "star_gradient_norm": 4.1793846019717385e-15,
+      "star_hessian_eigenvalues": [
+        -1.9804853366436999,
+        -0.1592645237044889,
+        2.7187320457702833
+      ],
+      "star_hessian_trace": 0.5789821854220938,
+      "minimum_local_jacobian_singular": 0.12401812523204868,
+      "first_constraint_jet_residual": 1.036264217661423e-16,
+      "second_constraint_jet_residual": 4.707987101082991e-15
+    },
+    {
+      "file": "n7moduli_asym_1.npy",
+      "root": 4,
+      "moving_neighbors": [
+        2,
+        5,
+        6
+      ],
+      "product": 3.3061727507368457,
+      "star_gradient_norm": 1.3244254583565621e-14,
+      "star_hessian_eigenvalues": [
+        -82.01219008677415,
+        -1.397867843953766,
+        0.7329114519325712
+      ],
+      "star_hessian_trace": -82.67714647879534,
+      "minimum_local_jacobian_singular": 0.023165937038779817,
+      "first_constraint_jet_residual": 2.331960800362295e-15,
+      "second_constraint_jet_residual": 2.905416110402949e-13
+    },
+    {
+      "file": "n7sym_-1_0.09518825.npy",
+      "root": 4,
+      "moving_neighbors": [
+        2,
+        5,
+        6
+      ],
+      "product": 3.292479190147068,
+      "star_gradient_norm": 6.574489216818468e-11,
+      "star_hessian_eigenvalues": [
+        -3.3941563686653984,
+        0.08783573231488324,
+        0.08783573231488377
+      ],
+      "star_hessian_trace": -3.2184849040356323,
+      "minimum_local_jacobian_singular": 0.2801159849670428,
+      "first_constraint_jet_residual": 3.4162363589329875e-16,
+      "second_constraint_jet_residual": 1.687599768720928e-15
+    },
+    {
+      "file": "n7sym_-1_0.44753623.npy",
+      "root": 4,
+      "moving_neighbors": [
+        2,
+        5,
+        6
+      ],
+      "product": 3.2751818329615148,
+      "star_gradient_norm": 2.2318081146104357e-11,
+      "star_hessian_eigenvalues": [
+        0.17131202476746232,
+        0.17131202476746488,
+        1.2167215917294352
+      ],
+      "star_hessian_trace": 1.5593456412643625,
+      "minimum_local_jacobian_singular": 0.42156650870048956,
+      "first_constraint_jet_residual": 2.782593151646962e-16,
+      "second_constraint_jet_residual": 8.340509464538086e-16
+    },
+    {
+      "file": "n7sym_-1_0.57301217.npy",
+      "root": 4,
+      "moving_neighbors": [
+        2,
+        5,
+        6
+      ],
+      "product": 3.2967661803914563,
+      "star_gradient_norm": 1.1222218656267988e-09,
+      "star_hessian_eigenvalues": [
+        -1.6333736868939464,
+        0.189156273670758,
+        0.1891562736707591
+      ],
+      "star_hessian_trace": -1.2550611395524294,
+      "minimum_local_jacobian_singular": 0.6427798429136671,
+      "first_constraint_jet_residual": 5.603902620485955e-17,
+      "second_constraint_jet_residual": 2.536353934061225e-16
+    },
+    {
+      "file": "n9_g0_critical_0.npy",
+      "root": 6,
+      "moving_neighbors": [
+        3,
+        7,
+        8
+      ],
+      "product": 3.2698915386717875,
+      "star_gradient_norm": 2.1703475268164172e-15,
+      "star_hessian_eigenvalues": [
+        0.13706210453310236,
+        0.17332370952486353,
+        2.215437772153008
+      ],
+      "star_hessian_trace": 2.5258235862109757,
+      "minimum_local_jacobian_singular": 0.33911685202487657,
+      "first_constraint_jet_residual": 1.8910009661594374e-16,
+      "second_constraint_jet_residual": 1.1751622585009609e-15
+    },
+    {
+      "file": "n9_g0_critical_1.npy",
+      "root": 6,
+      "moving_neighbors": [
+        3,
+        7,
+        8
+      ],
+      "product": 3.292090558068654,
+      "star_gradient_norm": 1.934942503058058e-14,
+      "star_hessian_eigenvalues": [
+        -112.1650780915358,
+        -1.3882791318991667,
+        0.5772980780886211
+      ],
+      "star_hessian_trace": -112.97605914534637,
+      "minimum_local_jacobian_singular": 0.006193822489321346,
+      "first_constraint_jet_residual": 1.3000626311485158e-14,
+      "second_constraint_jet_residual": 2.901799466167226e-12
+    },
+    {
+      "file": "n9_g2_critical_0.npy",
+      "root": 2,
+      "moving_neighbors": [
+        4,
+        6,
+        7,
+        8
+      ],
+      "product": 3.2628456804601393,
+      "star_gradient_norm": 1.4388723585002545e-13,
+      "star_hessian_eigenvalues": [
+        0.17532170944831338,
+        0.26784545888388106,
+        1.9252404258968645
+      ],
+      "star_hessian_trace": 2.3684075942290583,
+      "minimum_local_jacobian_singular": 0.3321737119502982,
+      "first_constraint_jet_residual": 1.1295312062920862e-16,
+      "second_constraint_jet_residual": 8.200821523359857e-16
+    },
+    {
+      "file": "n9_g2_critical_1.npy",
+      "root": 2,
+      "moving_neighbors": [
+        4,
+        6,
+        7,
+        8
+      ],
+      "product": 3.2753975581598325,
+      "star_gradient_norm": 2.517535223714526e-16,
+      "star_hessian_eigenvalues": [
+        0.170603634502192,
+        0.18045322934270866,
+        1.2674360895101775
+      ],
+      "star_hessian_trace": 1.6184929533550785,
+      "minimum_local_jacobian_singular": 0.02939869472419038,
+      "first_constraint_jet_residual": 1.695972720833897e-16,
+      "second_constraint_jet_residual": 8.106338859342884e-16
+    }
+  ],
+  "source_anti_jet_sha256": "aecadffb92f8bca4144423916b4454d5b9155e616ba2d66f6c1b6ec5741776ac",
+  "script_sha256": "2c0227f6e7cba393ec9cd23fe60fbb46c8baa92ecb462eb91c5f849b6a66f543"
+}

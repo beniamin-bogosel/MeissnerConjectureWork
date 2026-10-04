@@ -1,0 +1,11 @@
+{
+  "source_hashes": "passed",
+  "hyra_rows": 18,
+  "extension_rows": 63,
+  "replay_matches": "all",
+  "gap_free_coverage": "passed",
+  "status": "passed",
+  "reconstructed_hyra_minimum": "1046705971257/8000000000000",
+  "rational_gap_comparison": "passed",
+  "seconds": 52.851
+}

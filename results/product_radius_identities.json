@@ -1,0 +1,11 @@
+{
+  "status": "Symbolic identities passed; no optimization or numerical scans.",
+  "quadruple_radius_squared": "(-u*v + 4)/(-4*u - 4*v + 16)",
+  "quadruple_center_verified": true,
+  "positive_barycentric_weight_formulas_verified": true,
+  "secant_radius_identity_verified": true,
+  "radius_monotonic_derivative_verified": true,
+  "spherical_angle_derivative_verified": true,
+  "log_angle_secant_convexity_formula_verified": true,
+  "scope": "Algebra underlying the analytic note; not a proof of the common-optimizer conjecture."
+}

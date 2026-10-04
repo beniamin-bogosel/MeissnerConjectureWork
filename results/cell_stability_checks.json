@@ -1,0 +1,140 @@
+{
+  "status": "Arb continuum Hessian certificate and scalar bounds; thin-cell quadrature is floating evidence.",
+  "symbolic_checks": {
+    "flat_bump_energy": "131072/155925",
+    "thin_gap_coefficient_checked": true,
+    "unsplit_gap_derivative_checked": true
+  },
+  "bump_certificates": [
+    {
+      "bits": 128,
+      "amplitude": "13/10000",
+      "box_halfwidth": "1/2",
+      "accepted_boxes": 4474,
+      "maximum_depth": 7,
+      "coverage_area_in_scaled_coordinates": "4.0000000000000000000000000000000000000",
+      "status": "Both complementary Hessians positive definite on every certified box"
+    },
+    {
+      "bits": 256,
+      "amplitude": "13/10000",
+      "box_halfwidth": "1/2",
+      "accepted_boxes": 4474,
+      "maximum_depth": 7,
+      "coverage_area_in_scaled_coordinates": "4.000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "status": "Both complementary Hessians positive definite on every certified box"
+    }
+  ],
+  "w_and_stability_bound": {
+    "bits": 128,
+    "boxes_per_axis": 256,
+    "D_w_enclosure": "[0.003 +/- 7.10e-4]",
+    "D_w_lower_endpoint": "[0.0022908031333881690013928866811454554408 +/- 4.42e-41]",
+    "D_w_upper_endpoint": "[0.0031104807504616355370505309529960413783 +/- 4.42e-41]",
+    "D_amplitude_h_lower_bound": "[7.732928410263761513133242361182869373e-7 +/- 5.06e-44]",
+    "universal_stability_constant_upper_bound": "[0.9980131055553730182588652858111304036 +/- 4.89e-38]"
+  },
+  "one_point_refinement_certificate": {
+    "bits": 128,
+    "boxes_per_axis": 768,
+    "short_chord": "7/10",
+    "D_refined_cell": "[0.0006 +/- 6.26e-5]",
+    "D_refined_cell_lower": "[0.00053740218972474729230088735393071793463 +/- 2.95e-42]",
+    "D_refined_cell_upper": "[0.00060741759513770710031894589236760758306 +/- 4.56e-42]",
+    "D_square_lower": "[0.0025666757525526762524603908062944176057 +/- 2.61e-41]",
+    "nearest_branch_margin": "[0.00013700537200184785118460723682398727342 +/- 4.27e-42]",
+    "area_gap": "[0.0002473572474247518031063434560830284 +/- 9.11e-38]",
+    "universal_constant_upper_bound": "[0.460283289041762231604865277021084 +/- 3.95e-34]",
+    "new_vertex_exact": [
+      "-101/300 + 7*sqrt(502)/300",
+      "0",
+      "-7*sqrt(251)/300 + 49*sqrt(2)/300"
+    ],
+    "other_squared_chord": "[0.1177500298876229664158794529193912804 +/- 2.49e-38]",
+    "diameter_configuration_verified": true
+  },
+  "thin_asymptotic_constants": [
+    {
+      "bits": 128,
+      "gap_slope_at_unsplit": "[0.0038072958043952253352829559744282176 +/- 6.62e-38]",
+      "D_cubic_coefficient": "[0.00097763224020016687412085813621276983 +/- 3.01e-39]",
+      "area_gap_cubic_coefficient": "[0.00110653703545435694968703558189502887 +/- 6.95e-39]",
+      "limiting_gap_over_D": "[1.1318540755446007564401918934928049 +/- 2.10e-35]"
+    },
+    {
+      "bits": 256,
+      "gap_slope_at_unsplit": "[0.003807295804395225335282955974428217628527135165384550591358683688779742114 +/- 1.26e-76]",
+      "D_cubic_coefficient": "[0.0009776322402001668741208581362127698302551907653320353212346244033791919770 +/- 4.44e-77]",
+      "area_gap_cubic_coefficient": "[0.0011065370354543569496870355818950288750055528942787356701153717265896748079 +/- 2.20e-77]",
+      "limiting_gap_over_D": "[1.1318540755446007564401918934928048853116127215854396161494867079444919227 +/- 4.38e-74]"
+    }
+  ],
+  "thin_cell_floating_checks": [
+    {
+      "short_chord": 1.0,
+      "D_w": 0.002698592792714304,
+      "area_gap": 0.0,
+      "gap_over_D": 0.0,
+      "D_over_a_cubed": 0.002698592792714304,
+      "gap_over_a_cubed": 0.0
+    },
+    {
+      "short_chord": 0.7,
+      "D_w": 0.000572342166002338,
+      "area_gap": 0.0002473572474247518,
+      "gap_over_D": 0.43218421098078136,
+      "D_over_a_cubed": 0.0016686360524849507,
+      "gap_over_a_cubed": 0.0007211581557572942
+    },
+    {
+      "short_chord": 0.5,
+      "D_w": 0.00016272652911919594,
+      "area_gap": 0.00011707115148750303,
+      "gap_over_D": 0.7194349447578354,
+      "D_over_a_cubed": 0.0013018122329535675,
+      "gap_over_a_cubed": 0.0009365692119000243
+    },
+    {
+      "short_chord": 0.2,
+      "D_w": 8.208275063007473e-06,
+      "area_gap": 8.659563227638392e-06,
+      "gap_over_D": 1.0549796590838867,
+      "D_over_a_cubed": 0.001026034382875934,
+      "gap_over_a_cubed": 0.0010824454034547987
+    },
+    {
+      "short_chord": 0.1,
+      "D_w": 9.896173309895736e-07,
+      "area_gap": 1.100614916094927e-06,
+      "gap_over_D": 1.1121621273491247,
+      "D_over_a_cubed": 0.0009896173309895734,
+      "gap_over_a_cubed": 0.0011006149160949267
+    },
+    {
+      "short_chord": 0.05,
+      "D_w": 1.2257767172006705e-07,
+      "area_gap": 1.381328393804396e-07,
+      "gap_over_D": 1.1269004986152467,
+      "D_over_a_cubed": 0.000980621373760536,
+      "gap_over_a_cubed": 0.0011050627150435166
+    },
+    {
+      "short_chord": 0.02,
+      "D_w": 7.824881460923693e-09,
+      "area_gap": 8.85041137083417e-09,
+      "gap_over_D": 1.1310601208506252,
+      "D_over_a_cubed": 0.0009781101826154615,
+      "gap_over_a_cubed": 0.001106301421354271
+    }
+  ],
+  "asymmetric_floating_benchmark": {
+    "D_bump_two_resolutions": [
+      1.3296833016910762e-06,
+      1.3296833016910966e-06
+    ],
+    "cell_area_excess": 0.000673318514876885,
+    "stability_ratio": 0.9960658970119576
+  },
+  "certificate_sha256": "d9dada2b468f9ce1b5274337570271d300b9303eba649892dbd0735283e02498",
+  "elapsed_seconds": 9.205892324447632
+}

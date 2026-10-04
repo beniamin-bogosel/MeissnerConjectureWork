@@ -1,0 +1,12 @@
+{
+  "rejection_checks": [
+    "nondecreasing vertex chain",
+    "invalid plane step",
+    "false antipodal upper bound",
+    "truncated certificate",
+    "under-resolved angle grid",
+    "negative unsquared side rejected"
+  ],
+  "independent_fraction_samples": 486,
+  "status": "passed"
+}

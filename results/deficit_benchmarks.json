@@ -1,0 +1,104 @@
+{
+  "status": "floating-point consistency checks only",
+  "smooth_support_examples": [
+    {
+      "amplitude": 0,
+      "nodes": 128,
+      "V": 0.523598775598299,
+      "S": 3.141592653589794,
+      "D": 0.0,
+      "E": 0.004939590665754424,
+      "Blaschke_residual": 4.440892098500626e-16,
+      "joint_residual": 8.881784197001252e-16,
+      "radial_solid_angle_residual": 3.552713678800501e-15
+    },
+    {
+      "amplitude": 0,
+      "nodes": 256,
+      "V": 0.5235987755982988,
+      "S": 3.141592653589793,
+      "D": 0.0,
+      "E": 0.0049395906657544245,
+      "Blaschke_residual": 4.440892098500626e-16,
+      "joint_residual": 2.220446049250313e-16,
+      "radial_solid_angle_residual": 0.0
+    },
+    {
+      "amplitude": 0.02,
+      "nodes": 128,
+      "V": 0.5218035797962476,
+      "S": 3.1380022619856915,
+      "D": 0.10686462952679662,
+      "E": 0.005715596726980426,
+      "Blaschke_residual": 1.3322676295501878e-15,
+      "joint_residual": 4.440892098500626e-16,
+      "radial_solid_angle_residual": 5.329070518200751e-15
+    },
+    {
+      "amplitude": 0.02,
+      "nodes": 256,
+      "V": 0.5218035797962476,
+      "S": 3.138002261985691,
+      "D": 0.10686462952679675,
+      "E": 0.005715596726980414,
+      "Blaschke_residual": 4.440892098500626e-16,
+      "joint_residual": 2.220446049250313e-16,
+      "radial_solid_angle_residual": 3.552713678800501e-15
+    },
+    {
+      "amplitude": 0.05,
+      "nodes": 128,
+      "V": 0.5123788018354788,
+      "S": 3.119152706064157,
+      "D": 0.4754776013483017,
+      "E": 0.009896200885622859,
+      "Blaschke_residual": 3.9968028886505635e-15,
+      "joint_residual": 2.4424906541753444e-15,
+      "radial_solid_angle_residual": 3.907985046680551e-14
+    },
+    {
+      "amplitude": 0.05,
+      "nodes": 256,
+      "V": 0.5123788018354783,
+      "S": 3.119152706064153,
+      "D": 0.4754776013483019,
+      "E": 0.009896200885622859,
+      "Blaschke_residual": 1.3322676295501878e-15,
+      "joint_residual": 4.440892098500626e-16,
+      "radial_solid_angle_residual": 1.0658141036401503e-14
+    }
+  ],
+  "Meissner_interpolation_invariants": [
+    {
+      "t": 0.1,
+      "R": 0.6011351921262151,
+      "V": 0.4395704045953916,
+      "applies_to": "both Meissner tetrahedra"
+    },
+    {
+      "t": 0.25,
+      "R": 0.5842793267718458,
+      "V": 0.46524574017961323,
+      "applies_to": "both Meissner tetrahedra"
+    },
+    {
+      "t": 0.5,
+      "R": 0.5561862178478972,
+      "V": 0.4976640931899941,
+      "applies_to": "both Meissner tetrahedra"
+    },
+    {
+      "t": 0.75,
+      "R": 0.5280931089239487,
+      "V": 0.5171151049962226,
+      "applies_to": "both Meissner tetrahedra"
+    },
+    {
+      "t": 1.0,
+      "R": 0.5,
+      "V": 0.5235987755982988,
+      "applies_to": "both Meissner tetrahedra"
+    }
+  ],
+  "limitation": "No direct surface quadrature of either nonsmooth Meissner tetrahedron was performed."
+}

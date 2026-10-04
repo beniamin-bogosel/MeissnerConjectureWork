@@ -1,0 +1,355 @@
+{
+  "theorem_scope": "Every interior symmetric odd-ring star with k=5,7,9,... circle neighbors",
+  "not_claimed": "Arbitrary asymmetric neighborhoods, even k, or a maximal-circumradius optimizer theorem",
+  "certificates": [
+    {
+      "bits": 128,
+      "evaluations": 17941,
+      "accepted_boxes": 13456,
+      "maximum_depth": 7,
+      "domain": "0 <= u <= 1, 0 <= 10*w <= 1; s=1-u^2",
+      "certified_lower_bound": "Psi > 1/10",
+      "smallest_box_lower_endpoint": "[0.10005404510488775434942214965887640765 +/- 1.11e-39]",
+      "exact_partition_verified": true
+    },
+    {
+      "bits": 256,
+      "evaluations": 13456,
+      "accepted_boxes": 13456,
+      "maximum_depth": 7,
+      "domain": "0 <= u <= 1, 0 <= 10*w <= 1; s=1-u^2",
+      "certified_lower_bound": "Psi > 1/10",
+      "smallest_box_lower_endpoint": "[0.1000540460362103289649006652838764076509351028543405203282273663768660087362 +/- 1.90e-77]",
+      "exact_partition_verified": true
+    }
+  ],
+  "geometric_checks_classification": "Floating consistency checks, not used for the continuum sign proof",
+  "geometric_checks": [
+    {
+      "k": 5,
+      "vertices": 11,
+      "s": 0.1,
+      "product": 3.278909928814819,
+      "diameter_edges": 20,
+      "dual_pairs": 10,
+      "horizontal_first_derivative": 5.280649811190117e-18,
+      "parabola_vertical_acceleration": 1.1015549947398064,
+      "product_second_derivative": 0.058016546195017116,
+      "scaled_curvature_formula_comparison": 4.057865155004947e-13,
+      "local_jacobian_minimum_singular": 0.3757822382979361,
+      "first_constraint_jet_residual": 3.090429198459822e-16,
+      "second_constraint_jet_residual": 7.261304648570663e-16,
+      "finite_step_checks": [
+        {
+          "epsilon": -0.001,
+          "product_gain": 2.9008226487547972e-08,
+          "diameter_residual": 4.440892098500626e-16
+        },
+        {
+          "epsilon": 0.001,
+          "product_gain": 2.9008226487547972e-08,
+          "diameter_residual": 4.440892098500626e-16
+        }
+      ]
+    },
+    {
+      "k": 5,
+      "vertices": 11,
+      "s": 0.5,
+      "product": 3.2313561277023584,
+      "diameter_edges": 20,
+      "dual_pairs": 10,
+      "horizontal_first_derivative": 9.883983172149697e-17,
+      "parabola_vertical_acceleration": 1.4137506875425476,
+      "product_second_derivative": 0.2414719922348078,
+      "scaled_curvature_formula_comparison": 3.4561242756581123e-13,
+      "local_jacobian_minimum_singular": 0.4289595254782282,
+      "first_constraint_jet_residual": 2.793222413388546e-16,
+      "second_constraint_jet_residual": 7.712011676281898e-16,
+      "finite_step_checks": [
+        {
+          "epsilon": -0.001,
+          "product_gain": 1.2073602695394925e-07,
+          "diameter_residual": 4.440892098500626e-16
+        },
+        {
+          "epsilon": 0.001,
+          "product_gain": 1.2073602695394925e-07,
+          "diameter_residual": 4.440892098500626e-16
+        }
+      ]
+    },
+    {
+      "k": 5,
+      "vertices": 11,
+      "s": 0.9,
+      "product": 3.2399718764775445,
+      "diameter_edges": 20,
+      "dual_pairs": 10,
+      "horizontal_first_derivative": 4.546049739234249e-17,
+      "parabola_vertical_acceleration": 1.457864920515018,
+      "product_second_derivative": 0.33531183867284614,
+      "scaled_curvature_formula_comparison": 2.685074385055941e-13,
+      "local_jacobian_minimum_singular": 0.43701602444882076,
+      "first_constraint_jet_residual": 1.172293858617792e-16,
+      "second_constraint_jet_residual": 4.772813999133839e-16,
+      "finite_step_checks": [
+        {
+          "epsilon": -0.001,
+          "product_gain": 1.6765616939196093e-07,
+          "diameter_residual": 4.440892098500626e-16
+        },
+        {
+          "epsilon": 0.001,
+          "product_gain": 1.6765616983605014e-07,
+          "diameter_residual": 4.440892098500626e-16
+        }
+      ]
+    },
+    {
+      "k": 7,
+      "vertices": 15,
+      "s": 0.1,
+      "product": 3.2756875711500233,
+      "diameter_edges": 28,
+      "dual_pairs": 14,
+      "horizontal_first_derivative": 1.640211554412111e-17,
+      "parabola_vertical_acceleration": 1.0924183903535463,
+      "product_second_derivative": 0.05747231057734831,
+      "scaled_curvature_formula_comparison": 2.886579864025407e-15,
+      "local_jacobian_minimum_singular": 0.31469212271294755,
+      "first_constraint_jet_residual": 2.3917720320319286e-16,
+      "second_constraint_jet_residual": 7.033521988126172e-16,
+      "finite_step_checks": [
+        {
+          "epsilon": -0.001,
+          "product_gain": 2.8736093060643952e-08,
+          "diameter_residual": 3.3306690738754696e-16
+        },
+        {
+          "epsilon": 0.001,
+          "product_gain": 2.8736093060643952e-08,
+          "diameter_residual": 4.440892098500626e-16
+        }
+      ]
+    },
+    {
+      "k": 7,
+      "vertices": 15,
+      "s": 0.5,
+      "product": 3.2184847039658577,
+      "diameter_edges": 28,
+      "dual_pairs": 14,
+      "horizontal_first_derivative": 3.243219374259654e-17,
+      "parabola_vertical_acceleration": 1.3832082457752952,
+      "product_second_derivative": 0.2563276503378559,
+      "scaled_curvature_formula_comparison": 1.1102230246251565e-15,
+      "local_jacobian_minimum_singular": 0.31469212271294755,
+      "first_constraint_jet_residual": 1.8092233820388593e-16,
+      "second_constraint_jet_residual": 6.86897221591604e-16,
+      "finite_step_checks": [
+        {
+          "epsilon": -0.001,
+          "product_gain": 1.2816386663061508e-07,
+          "diameter_residual": 4.440892098500626e-16
+        },
+        {
+          "epsilon": 0.001,
+          "product_gain": 1.2816386618652587e-07,
+          "diameter_residual": 4.440892098500626e-16
+        }
+      ]
+    },
+    {
+      "k": 7,
+      "vertices": 15,
+      "s": 0.9,
+      "product": 3.2304985793169507,
+      "diameter_edges": 28,
+      "dual_pairs": 14,
+      "horizontal_first_derivative": -4.907341491620611e-17,
+      "parabola_vertical_acceleration": 1.4328025877521096,
+      "product_second_derivative": 0.3740277092589428,
+      "scaled_curvature_formula_comparison": 4.440892098500626e-16,
+      "local_jacobian_minimum_singular": 0.3146921227129475,
+      "first_constraint_jet_residual": 1.301398535715878e-16,
+      "second_constraint_jet_residual": 6.084328160705578e-16,
+      "finite_step_checks": [
+        {
+          "epsilon": -0.001,
+          "product_gain": 1.8701413129207367e-07,
+          "diameter_residual": 4.440892098500626e-16
+        },
+        {
+          "epsilon": 0.001,
+          "product_gain": 1.8701413129207367e-07,
+          "diameter_residual": 2.220446049250313e-16
+        }
+      ]
+    },
+    {
+      "k": 9,
+      "vertices": 19,
+      "s": 0.1,
+      "product": 3.2744060842100935,
+      "diameter_edges": 36,
+      "dual_pairs": 18,
+      "horizontal_first_derivative": -2.2807853103058363e-17,
+      "parabola_vertical_acceleration": 1.0890591000273189,
+      "product_second_derivative": 0.05722341963197286,
+      "scaled_curvature_formula_comparison": 5.551115123125783e-15,
+      "local_jacobian_minimum_singular": 0.24557560793794553,
+      "first_constraint_jet_residual": 2.0799946641162974e-16,
+      "second_constraint_jet_residual": 9.425315144132773e-16,
+      "finite_step_checks": [
+        {
+          "epsilon": -0.001,
+          "product_gain": 2.861164150047557e-08,
+          "diameter_residual": 4.440892098500626e-16
+        },
+        {
+          "epsilon": 0.001,
+          "product_gain": 2.861164150047557e-08,
+          "diameter_residual": 4.440892098500626e-16
+        }
+      ]
+    },
+    {
+      "k": 9,
+      "vertices": 19,
+      "s": 0.5,
+      "product": 3.2133769328461357,
+      "diameter_edges": 36,
+      "dual_pairs": 18,
+      "horizontal_first_derivative": 9.504705533955204e-17,
+      "parabola_vertical_acceleration": 1.3716498909717512,
+      "product_second_derivative": 0.26224162335156137,
+      "scaled_curvature_formula_comparison": 3.3306690738754696e-16,
+      "local_jacobian_minimum_singular": 0.24557560793794544,
+      "first_constraint_jet_residual": 1.9319320869246816e-16,
+      "second_constraint_jet_residual": 5.591086693106746e-16,
+      "finite_step_checks": [
+        {
+          "epsilon": -0.001,
+          "product_gain": 1.3112085728295142e-07,
+          "diameter_residual": 4.440892098500626e-16
+        },
+        {
+          "epsilon": 0.001,
+          "product_gain": 1.3112085728295142e-07,
+          "diameter_residual": 4.440892098500626e-16
+        }
+      ]
+    },
+    {
+      "k": 9,
+      "vertices": 19,
+      "s": 0.9,
+      "product": 3.2267969635493285,
+      "diameter_edges": 36,
+      "dual_pairs": 18,
+      "horizontal_first_derivative": -3.136068296650572e-17,
+      "parabola_vertical_acceleration": 1.422990406516806,
+      "product_second_derivative": 0.3893999828458978,
+      "scaled_curvature_formula_comparison": 1.6653345369377348e-15,
+      "local_jacobian_minimum_singular": 0.24557560793794544,
+      "first_constraint_jet_residual": 2.332684674545505e-16,
+      "second_constraint_jet_residual": 6.702411204397435e-16,
+      "finite_step_checks": [
+        {
+          "epsilon": -0.001,
+          "product_gain": 1.9470027767809484e-07,
+          "diameter_residual": 4.440892098500626e-16
+        },
+        {
+          "epsilon": 0.001,
+          "product_gain": 1.9470027723400563e-07,
+          "diameter_residual": 4.440892098500626e-16
+        }
+      ]
+    },
+    {
+      "k": 11,
+      "vertices": 23,
+      "s": 0.1,
+      "product": 3.2737668985852912,
+      "diameter_edges": 44,
+      "dual_pairs": 22,
+      "horizontal_first_derivative": 4.476315037421397e-18,
+      "parabola_vertical_acceleration": 1.0874369429362796,
+      "product_second_derivative": 0.057093747052606614,
+      "scaled_curvature_formula_comparison": 2.55351295663786e-15,
+      "local_jacobian_minimum_singular": 0.2012635744130133,
+      "first_constraint_jet_residual": 1.7362202462444394e-16,
+      "second_constraint_jet_residual": 1.0714150990925982e-15,
+      "finite_step_checks": [
+        {
+          "epsilon": -0.001,
+          "product_gain": 2.8546804031748252e-08,
+          "diameter_residual": 4.440892098500626e-16
+        },
+        {
+          "epsilon": 0.001,
+          "product_gain": 2.8546803587659042e-08,
+          "diameter_residual": 2.220446049250313e-16
+        }
+      ]
+    },
+    {
+      "k": 11,
+      "vertices": 23,
+      "s": 0.5,
+      "product": 3.2108319793472266,
+      "diameter_edges": 44,
+      "dual_pairs": 22,
+      "horizontal_first_derivative": 2.1964975514736777e-17,
+      "parabola_vertical_acceleration": 1.3660044302113432,
+      "product_second_derivative": 0.2652098642105008,
+      "scaled_curvature_formula_comparison": 2.220446049250313e-16,
+      "local_jacobian_minimum_singular": 0.20126357441301326,
+      "first_constraint_jet_residual": 2.267080725602459e-16,
+      "second_constraint_jet_residual": 7.160185410978421e-16,
+      "finite_step_checks": [
+        {
+          "epsilon": -0.001,
+          "product_gain": 1.3260498255007747e-07,
+          "diameter_residual": 3.3306690738754696e-16
+        },
+        {
+          "epsilon": 0.001,
+          "product_gain": 1.3260498166189905e-07,
+          "diameter_residual": 4.440892098500626e-16
+        }
+      ]
+    },
+    {
+      "k": 11,
+      "vertices": 23,
+      "s": 0.9,
+      "product": 3.224964967820954,
+      "diameter_edges": 44,
+      "dual_pairs": 22,
+      "horizontal_first_derivative": 8.965256425831201e-17,
+      "parabola_vertical_acceleration": 1.418131457155527,
+      "product_second_derivative": 0.39706651243973423,
+      "scaled_curvature_formula_comparison": 5.551115123125783e-16,
+      "local_jacobian_minimum_singular": 0.20126357441301324,
+      "first_constraint_jet_residual": 1.4453645233221007e-16,
+      "second_constraint_jet_residual": 4.0602906698849454e-16,
+      "finite_step_checks": [
+        {
+          "epsilon": -0.001,
+          "product_gain": 1.9853354960019942e-07,
+          "diameter_residual": 5.551115123125783e-16
+        },
+        {
+          "epsilon": 0.001,
+          "product_gain": 1.9853355004428863e-07,
+          "diameter_residual": 3.3306690738754696e-16
+        }
+      ]
+    }
+  ],
+  "certificate_sha256": "a63d3aed01fd5dd9288cad7096f1c1e38c8b70346a038ab665f7afb3ea25a619",
+  "script_sha256": "f06f0a6b1c382a0c8fb07c5070be1d02d950b8b75a39b7af223fd3f8e7d64db0"
+}

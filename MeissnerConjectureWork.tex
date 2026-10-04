@@ -1,0 +1,3066 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,amsthm,booktabs,longtable,array,listings}
+\usepackage[a4paper,margin=24mm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Meissner Conjecture Work},pdfauthor={Research consolidation prepared with Codex}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Sph}{\mathbb S^2}
+\newcommand{\VM}{V_{\mathrm M}}
+\newcommand{\RJ}{R_{\mathrm J}}
+\newcommand{\EM}{E_{\mathrm M}}
+\newcommand{\dd}{\,\mathrm d}
+\newcommand{\Et}{E_{\mathrm{tan}}}
+\newcommand{\Q}{\mathcal Q}
+\newcommand{\Dir}{\mathcal D}
+\newcommand{\C}{\mathcal C}
+\newcommand{\Pp}{\mathcal P}
+\newcommand{\B}{\mathcal B}
+\newcommand{\Sp}{\operatorname{Sp}}
+\newcommand{\diam}{\operatorname{diam}}
+\newcommand{\Th}{\Theta}
+\lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,columns=fullflexible,keepspaces=true,showstringspaces=false,frame=single}
+\setlength{\emergencystretch}{2em}
+\title{Meissner Conjecture Work\\\large Independent verification of Hyra, circumradius localization,\\and structural progress toward the endpoint}
+\author{Research consolidation prepared with Codex\\\small Based on Beniamin Bogosel's papers and project working notes}
+\date{4 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We give an independent, exact-arithmetic verification of the geometric lower-bound calculation publicly posted by Hyra, including its nonsmooth analytic reduction and all eighteen cap rows. Applying that method to a different radius partition yields the substantial localization
+\[
+ R(K)\leq0.60247\ \Longrightarrow\
+ V(K)\geq\frac{1336460360333}{10^{13}}\pi>V_{\mathrm M},
+\]
+so every width-one volume minimizer has circumradius greater than $0.60247$.
+This is not a better universal volume bound than Jiang's stated $0.41275$.
+We consolidate further analytic and computer-assisted results: generating circumcontacts of finite Meissner polyhedra; improved static repair using Jiang's contact deficit; square-cell stability for a specified canonical refinement class; joint product--radius ascent criteria; and a uniform instability certificate for symmetric stars with every odd number of opposite vertices at least five. A separate analysis explains an obstruction to using Hynd's weak flow backward. All hypotheses, numerical qualifications, and unresolved steps are retained. The conjecture, maximal circumradius of a minimizer, and the unrestricted tetrahedral completion inequality remain open.
+\end{abstract}
+\tableofcontents
+\clearpage
+\section{Results, attribution, and the remaining logical gap}
+Throughout, width and diameter are normalized to one. Put
+\[
+ \RJ=\sqrt{3/8}=0.612372435695794\ldots,
+\]
+\[
+ \VM=\frac\pi{12}(8-3\sqrt3\arccos(1/3))
+ =0.419860045965080\ldots.
+\]
+Jung's equality case identifies $R=\RJ$ with containment of a unit regular tetrahedron. It does not identify the least-volume completion of that tetrahedron.
+The two missing implications are therefore distinct:
+\[
+ \text{a global minimizer can be chosen with }R=\RJ,
+ \qquad R=\RJ\ \Longrightarrow\ V\geq\VM.
+\]
+Neither is assumed below. Finite eight-point configurations form only a particular endpoint subproblem; they do not exhaust Meissner polyhedra or all constant-width bodies.
+
+\begin{center}\small
+\begin{tabular}{p{.31\linewidth}p{.62\linewidth}}\toprule
+Result & Status and scope\\\midrule
+Hyra's universal bound & Independently reconstructed exact certificates; not a proof-assistant formalization.\\
+$R(K_*)>0.60247$ & Certified for every global volume minimizer; a roughly $32.6\%$ reduction of the unresolved radius band compared with the analytic threshold $0.5976654\ldots$.\\
+$R(M)=R(X)$ & Analytic proof for every finite standard Meissner smoothing; its enclosing-sphere contacts are generators.\\
+Static endpoint repair & Analytic construction, with interval-checked constants: $d_H\leq14.022(3/8-R^2)$ on the localized band. No favorable volume sign is proved.\\
+Square-cell stability & Analytic theorem for mixtures on subdivisions of the three original centre arcs; unrestricted fillings remain open.\\
+Fixed-graph joint ascent & Conditional analytic criteria, supplemented by 25 feasible saved configurations; no exhaustive classification.\\
+Moving circle stars & Certified interior instability for the symmetric seven-point family and all symmetric odd $k\geq5$ families. No assertion for arbitrary asymmetric or even stars.\\
+Backward weak flow & Analytic dissipation and endpoint obstructions for the particular Hynd flow and stated competitive-volume hypotheses.\\\bottomrule
+\end{tabular}
+\end{center}
+
+Hyra supplies the cap method \cite{Hyra}; Jiang supplies the stronger stated universal bound and the total contact-deficit estimate \cite{Jiang}. Bogosel's published and recent papers supply the volume formula, dangling-point reductions, and fixed-graph spherical-product formulation \cite{BogoselVolume,BogoselDangling,BogoselGraphs}. Hynd supplies density, the boundary decomposition of Meissner polyhedra, and the weak evolution \cite{HyndDensity,HyndFlow}. The deductions assembled here do not claim literature priority. Local cell geometry and earlier product calculations are credited to the project working notes \cite{Local}; the needed formulas and proofs are included here.
+
+The certificate records distinguish exact rational inequalities, Arb interval enclosures, and floating diagnostics. A saved historical replay is not described as a fresh replay during this consolidation. The retained numerical package and an executable Hyra replay procedure are described in the appendices. This TeX source has no dependency on the older reports, source PDFs, separate scripts, figures, or bibliography files.
+
+\part{Hyra verification and a substantial circumradius exclusion}
+
+\section{Scope, provenance, and verification status}
+The independent audit fetched Hyra's public repository \cite{Hyra} and pinned commit
+\begin{center}\small\texttt{09b2d2e3c362c67a78f544c836bd8e4b54a05527}.\end{center}
+At that commit the result directory contains only its PDF and \texttt{paper.tex}; no certificate program or proof-assistant formalization for this result was found in the repository tree. This is a repository inspection, not a claim about every possible external release. The retained support manifest records the source hashes and relevant repository-tree entries; the original source artifacts are available at the pinned public URL. The artifact hashes are:
+\begin{quote}\scriptsize\ttfamily
+TeX: fcc947e2ad9614ff47cb9a8dbfd2f91b44eb7b86ea487459c1e201d825a4a0dc\\
+PDF: b6093e1f973f16ef5f2208cb6199d77db6a2ead07e319278d6d8671524361dee
+\end{quote}
+The independently written checker reconstructs admissible rational chains from the algorithm, rather than recovering unpublished original chains. Thus ``reproduced'' means that the stated lower bound has been independently certified using the stated method. It does not mean bit-for-bit agreement with unavailable original certificates. The last three reconstructed rows are slightly stronger than their printed decimal values.
+
+
+The certificates are computer-assisted mathematical verification, not a formal proof in Lean or another proof assistant. Exact FLINT arithmetic, Python control flow, and the analytic reduction are part of the trusted implementation. Separate standard-library fraction checks and deliberately invalid certificates test acceptance logic.
+
+\section{Analytic baseline, including nonsmooth bodies}
+All bodies below are convex of constant width one; $V$ and $S$ denote volume and surface area, and $\sigma(\Sph)=4\pi$. Thus $\sigma$ is ordinary area measure, not probability measure. Set
+\[
+ \RJ=\sqrt{3/8},\qquad
+ \VM=\frac{\pi}{12}\left(8-3\sqrt3\arccos\frac13\right).
+\]
+For a support function $p$, $p(u)+p(-u)=1$, so $K+(-K)$ is the unit ball and $\operatorname{diam}K=1$. Mixed-volume expansion of this identity gives
+\begin{equation}\label{hyra:blaschke}
+ S=2V+\frac{2\pi}{3}.
+\end{equation}
+Indeed, if $W=V(K,K,-K)$, reflection symmetry gives $4\pi/3=2V+6W$, while $S/3=V+W$.
+
+Put a circumcenter at the origin and write its radius as $R$. Contact balance supplies $2\leq n\leq4$ points $Ru_i$ and positive weights satisfying
+\[
+ \sum_i\lambda_i u_i=0,\qquad\sum_i\lambda_i=1.
+\]
+The diameter inequality gives $u_i\cdot u_j\geq-\eta$, where $\eta=1/(2R^2)-1$. Taking the scalar product with $u_j$ yields $\lambda_j\leq\eta/(1+\eta)$, hence $n\geq1/(1-2R^2)$. This proves $1/2\leq R\leq\RJ$, and forces a four-point contact representation when $R^2>1/3$. It does not assert that the entire circumsphere contact set has exactly four points.
+
+Since $p\leq R$ and $p(u)=1-p(-u)$, $B(0,1-R)\subset K$. Its radial function $\rho$ is therefore positive and Lipschitz. If $x\in\partial K$ and $n$ is any outer unit normal, choose a point $y$ on the opposite support plane. Then $(x-y)\cdot n=1$ and $|x-y|\leq1$, forcing
+\begin{equation}\label{hyra:opposite}
+ x-n\in K,\qquad 2x\cdot n\geq |x|^2+1-R^2.
+\end{equation}
+This argument needs neither differentiability nor positive curvature.
+
+\begin{lemma}[Nonsmooth transport and its exact deficit]\label{hyra:transport}
+For $0<m\leq1-R^2$, define
+\[
+ D_m=\int_{\partial K}\left(\frac{2x\cdot n}{|x|^2+m}-1\right)\dd\mathcal H^2(x).
+\]
+The normal is taken where it exists, which is almost everywhere. Then
+\begin{equation}\label{hyra:transporteq}
+ 3V=\int_{\Sph}\rho^3\dd\sigma,\qquad
+ S+D_m=\int_{\Sph}\frac{2\rho^3}{\rho^2+m}\dd\sigma,\qquad D_m\geq0.
+\end{equation}
+If $m<1-R^2$, then $D_m>0$.
+\end{lemma}
+\begin{proof}
+A convex body has Lipschitz boundary, so the Gauss--Green theorem applies to the smooth field $F_m(x)=2x/(|x|^2+m)$. Its divergence is $2(|x|^2+3m)/(|x|^2+m)^2$. Polar integration and
+\[
+ \frac{\dd}{\dd r}\frac{2r^3}{r^2+m}
+ =r^2\frac{2(r^2+3m)}{(r^2+m)^2}
+\]
+give the second identity; ordinary polar integration gives the first. Equation \eqref{hyra:opposite} gives nonnegativity. In fact
+\[
+ D_m\geq\frac{1-R^2-m}{R^2+m}\,S,
+\]
+which is strictly positive in the stated case. No determinant formula for a nonsmooth surface-area measure is used.
+\end{proof}
+
+For $s>0$, the strictly concave function $\phi_m(X)=2X/(X^{2/3}+m)$ has tangent coefficients
+\[
+ a=\frac{2(s^2+3m)}{3(s^2+m)^2},\qquad
+ b=\frac{4s^5}{3(s^2+m)^2},\qquad
+ \phi_m''(X)=-\frac{4(X^{2/3}+5m)}{9X^{1/3}(X^{2/3}+m)^3}.
+\]
+Write $G_{m,s}(r)=ar^3+b-2r^3/(r^2+m)$ and $\Et=\int G_{m,s}(\rho)\dd\sigma\geq0$. Substitution into \eqref{hyra:blaschke} and \eqref{hyra:transporteq} yields the exact identity
+\begin{equation}\label{hyra:joint}
+ (3a-2)V=\frac{2\pi}{3}-4\pi b+\Et+D_m.
+\end{equation}
+All later divisions check $3a-2>0$ explicitly. With $m=5/8$, $s=11/24$, exact arithmetic gives
+\[
+ a=\frac{461184}{231361},\quad b=\frac{161051}{4164498},\quad
+ V\geq\frac{533032\pi}{4143735}.
+\]
+The source's two polynomial identities for $G$ and $G'$ were also verified symbolically, independently of their calculus derivation.
+
+\section{Audit of the handoff radius gap}
+Put $s=(3\VM/(4\pi))^{1/3}$ and, for a radius upper bound $\bar R$, put $m=1-\bar R^2$. Discarding both deficits in \eqref{hyra:joint} gives
+\begin{equation}\label{hyra:B}
+ V\geq B(m):=\frac\pi3\frac{(s^2+m)^2-8s^5}{s^2+3m-(s^2+m)^2}.
+\end{equation}
+Here $s<1/2$ and $5/8\leq m\leq3/4$ imply $s^2+m<1$, so the denominator is greater than $2m>0$. Direct algebra gives
+\begin{equation}\label{hyra:factor}
+ B(m)-\VM=\frac\pi3\frac{(s^2+m)(1+4s^3)(m-m_*)}{s^2+3m-(s^2+m)^2},
+ \qquad m_*:=\frac{12s^3}{1+4s^3}-s^2.
+\end{equation}
+Thus the handoff's sign criterion is correct. For $R<\bar R$, Lemma~\ref{hyra:transport} makes the resulting inequality strict.
+
+The following are rigorous decimal enclosures: each printed number has absolute error less than $10^{-20}$; the machine-readable output retains substantially more precision.
+\begin{center}
+\begin{tabular}{ll}\toprule
+Quantity & Enclosed value\\\midrule
+$\VM$ & $0.41986004596508022334213$\\
+$\RJ$ & $0.61237243569579452454932$\\
+$s$ & $0.46452095821032842234975$\\
+$m_*$ & $0.64279607104426873531296$\\
+$R_*:=\sqrt{1-m_*}$ & $0.59766539882758083646173$\\
+$\varepsilon_*:=\RJ-R_*$ & $0.01470703686821368808759$\\
+$2(\pi/6-\VM)/(\RJ-1/2)$ & $1.84633765372945482168967$\\\bottomrule
+\end{tabular}
+\end{center}
+The last value corrects the handoff's floating-point tail $1.846337653729458\ldots$; the formula and conclusion are unchanged. For $m_\varepsilon=1-(\RJ-\varepsilon)^2$, the sample bounds are:
+\begin{center}
+\begin{tabular}{rrr}\toprule
+$\varepsilon$ & $B(m_\varepsilon)$ & $B(m_\varepsilon)-\VM$\\\midrule
+$0.015$ & $0.420173490007854718$ & $0.000313444042774495$\\
+$0.020$ & $0.425507936005677343$ & $0.005647890040597120$\\
+$0.030$ & $0.436091578975085809$ & $0.016231533010005586$\\\bottomrule
+\end{tabular}
+\end{center}
+These rounded table entries have error less than $10^{-18}$; they are not themselves downward-rounded proof coefficients.
+
+\begin{proposition}[Tangent optimization alone cannot move this threshold]
+Among bounds obtained by dropping $\Et$ and $D_m$, no choice of tangent radius excludes $V=\VM$ when $m\leq m_*$.
+\end{proposition}
+\begin{proof}
+Set $X_M=3\VM/(4\pi)$. Concavity implies $a_sX_M+b_s\geq\phi_m(X_M)$, with equality at $s=X_M^{1/3}$. To exclude $V=\VM$ by the tangent inequality requires $3a_s\VM+4\pi b_s<2\VM+2\pi/3$. The left side is minimized at the handoff's choice of $s$. At $m\leq m_*$ even that minimum satisfies the opposite weak inequality, by \eqref{hyra:factor}. Thus a different tangent cannot help this specific comparison. Tangent optimization can improve numerical bounds away from the threshold.
+\end{proof}
+
+The handoff's support-function energy normalization is also consistent. Write $p=1/2+h$ with $h$ odd, and $Ah=\nabla^2h+hI$. Convexity and the antipodal width relation give $-I/2\preceq Ah\preceq I/2$ (weakly when necessary). In the smooth case,
+\[
+ S=\int_{\Sph}\det(\tfrac12I+Ah)\dd\sigma
+ =\pi+\int_{\Sph}(h^2-\tfrac12|\nabla h|^2)\dd\sigma,
+\]
+where the integrated Hessian determinant identity follows from integration by parts on the sphere. Combining with \eqref{hyra:blaschke} gives $V=\pi/6-E_{\mathrm{AG}}(h)/2$, with $E_{\mathrm{AG}}=\int(\tfrac12|\nabla h|^2-h^2)\dd\sigma$. Rotational smoothing preserves the support-function and width constraints, and the identity passes to the limit in $H^1$. This energy is distinct from the tangent deficit $\Et$. Translation harmonics contribute zero energy.
+
+For completeness, the conjecture-strength interpretation of a gap for every $\varepsilon>0$ is correct. Minkowski interpolation $K_t=(1-t)K+tB(0,1/2)$ has
+\[
+ R(K_t)=(1-t)R(K)+t/2,
+\]
+because addition of a radius-$b$ ball increases the maximum distance from every candidate center by exactly $b$. Consequently an inequality for every sub-Jung radius implies the global non-strict Meissner inequality by continuity at the endpoint. The converse needs the extra hypothesis that every minimizer has radius $\RJ$; compactness then produces a positive gap on $R\leq\RJ-\varepsilon$.
+
+Steiner's formula and \eqref{hyra:blaschke} give, without smoothness assumptions,
+\begin{equation}\label{hyra:interpolation}
+ V(K_t)=(1-t)^2V(K)+[1-(1-t)^2]\frac\pi6.
+\end{equation}
+Indeed the mean-curvature coefficient is $\int_{\Sph}p\dd\sigma=2\pi$, and substitution of $a=1-t,b=t/2$ into $V(aK+bB)$ proves the identity. Applied to either Meissner tetrahedron, it proves the handoff's upper restriction
+\[
+ g(\varepsilon)\leq\left(\frac{2\varepsilon}{\delta}-\frac{\varepsilon^2}{\delta^2}\right)(\pi/6-\VM),
+ \qquad\delta=\RJ-1/2.
+\]
+This is an upper bound on a possible gap, not a proof of its positivity.
+
+\section{Exact reconstruction of Hyra's cap certificate}
+For a radius interval $[R_-,R_+]$, let $m=1-R_+^2$, with $m=5/8$ for the final Jung interval. For a selected contact tetrahedron,
+\begin{equation}\label{hyra:contactbounds}
+ -\eta\leq u_i\cdot u_j\leq T(\eta):=\frac{4\eta^2}{1-\eta}-1,
+ \qquad \eta=\frac1{2R^2}-1.
+\end{equation}
+For the upper bound, put $A=\lambda_1+\lambda_2$ and $t=u_1\cdot u_2$. Summing the balance equations for this pair gives $A(1+t)\leq2\eta(1-A)$; the other pair gives $A\geq(1-\eta)/(1+\eta)$. These imply \eqref{hyra:contactbounds}. Since $T$ is increasing, $T(\eta_-)$ for $\eta_-=1/(2R_-^2)-1$ controls the entire interval.
+
+Use $\theta_k=2\arctan(k/N)$ and the rational trigonometric values
+\[
+ c_k=\frac{N^2-k^2}{N^2+k^2},\qquad s_k=\frac{2kN}{N^2+k^2}.
+\]
+Their successive angle differences also have exact rational cosine and sine $(c^\Delta_k,s^\Delta_k)$. The normal-angle estimate following from \eqref{hyra:opposite} implies the supporting-plane propagation function
+\[
+ N_m(x,\theta)=\frac{x(x^2+m)}{(x^2+m)\cos\theta-\sqrt{4x^2-(x^2+m)^2}\sin\theta}.
+\]
+It is increasing in both admissible arguments. For $X=w_k,Y=w_{k-1}$, a certificate checks
+\begin{align*}
+ T_0&=X^2+m,\quad D_0=4X^2-T_0^2\geq0,\\
+ T_0(Yc^\Delta_k-X)&>0,\qquad
+ Y^2D_0(s^\Delta_k)^2\leq T_0^2(Yc^\Delta_k-X)^2.
+\end{align*}
+The sign condition before squaring is essential. These inequalities imply $N_m(w_k,\theta_k-\theta_{k-1})\leq w_{k-1}$. Induction along a geodesic then gives $\rho\geq w_k$ on a contact cap of radius $\theta_k$.
+
+Conversely $K\subset B(Ru_i,1)$ gives, on the cap about $-u_i$,
+\[
+ \rho\leq-R_-c_k+\sqrt{1-R_-^2s_k^2}\leq z_k.
+\]
+The last inequality is checked by $z_k+R_-c_k\geq0$ and $(z_k+R_-c_k)^2\geq1-R_-^2s_k^2$. Values satisfy $w_{n_v}>s\geq z_{n_a}$ and lie in the required radial ranges. Same-sign caps are disjoint by
+\[
+ c_{n_v}^2-s_{n_v}^2>T(\eta_-),\qquad
+ c_{n_a}^2-s_{n_a}^2>T(\eta_-).
+\]
+Opposite-sign caps cannot intersect because they would force both $\rho>s$ and $\rho\leq s$. Hence no overlap is counted twice.
+
+Writing $\Delta=4\sum_k(c_{k-1}-c_k)G(w_k)+4\sum_k(c_{k-1}-c_k)G(z_k)$ gives $\Et\geq2\pi\Delta$ and
+\begin{equation}\label{hyra:capbound}
+ V\geq\pi\frac{2/3-4b+2\Delta}{3a-2}.
+\end{equation}
+The implementation rounds each rational summand downward on a $10^{-18}$ grid before multiplying the sum by four; equivalently it rounds the running sum downward after every addition. It rounds the final coefficient of $\pi$ downward on a $10^{-15}$ grid. Candidate search uses floating arithmetic only to suggest an integer. Every acceptance decision uses exact rational comparisons, with an explicit failure on unresolved candidate searches. Replay reads the saved integer arrays and performs no floating candidate search.
+
+All eighteen source rows verify. The minimum reconstructed coefficient is
+\[
+ \frac{130838246407125}{10^{15}},
+ \qquad\text{in E2},
+\]
+which is slightly stronger than Hyra's advertised $130838246407123/10^{15}$. We claim reproduction of the advertised constant, not recovery of its unpublished final digits. The independently recovered analytic case $R\leq3/5$ has coefficient $76439431/575385750$. Every neighboring interval endpoint agrees exactly, and the final endpoint is $\RJ$. Shared endpoints belong to two closed intervals and either proof applies. The source's phrase ``exactly one'' interval is immaterial to coverage.
+
+The strictly lower decimal $0.411040473721188$ is also checked without a floating value of $\pi$: the rational partial sum
+\[
+ \pi_{40}=6\sum_{k=0}^{39}\frac{\binom{2k}{k}}{(2k+1)2^{4k+1}}<\pi
+\]
+already makes Hyra's coefficient times $\pi_{40}$ exceed that decimal. Appendix~\ref{hyra:tables} lists the reconstructed coefficients.
+
+\section{A certified advance in the radius strategy}
+\begin{theorem}[New certified exclusion interval]\label{hyra:new}
+For a convex body of constant width one,
+\[
+ R\leq0.60246\quad\Longrightarrow\quad
+ V\geq\frac{133648051299230}{10^{15}}\pi
+ >\VM+0.00000769.
+\]
+In particular every global volume minimizer has $R>0.60246$.
+\end{theorem}
+\begin{proof}
+For $R\leq747/1250=0.5976$, use $m=1-(747/1250)^2$, $s=929/2000$ in the analytic tangent inequality. The coefficient is exactly
+\[
+ q_{\mathrm{init}}=\frac{11285283027472957}{84427786954946394}.
+\]
+For the remaining interval, apply \eqref{hyra:capbound} on 63 adjacent rational intervals: increments $10^{-4}$ from $0.5976$ through $0.6023$ (47 intervals), and increments $10^{-5}$ from $0.6023$ through $0.60246$ (16 intervals). Each uses $s=4872/10000$, $N=38400$, and radial grid denominator $10^{12}$. The saved chains prove every required inequality exactly. The smallest rational coefficient, including the analytic initial case, is the displayed coefficient, attained on $[0.60245,0.60246]$.
+
+For this last row $m=1592604871/2500000000$, $(n_v,n_a)=(7021,16731)$, and the certified deficit is $\Delta\geq8412619236799/1953125000000000$. Arb encloses the resulting volume by
+\[
+ q\pi=0.419867736128252789547184355228\ldots
+\]
+and its excess over $\VM$ by
+\[
+ q\pi-\VM=0.000007690163172566205054354260\ldots>0.00000769.
+\]
+This establishes the strict comparison. A global minimizer has volume at most $\VM$, because a Meissner tetrahedron is admissible, so it cannot lie in this radius interval.
+\end{proof}
+
+For every
+\[
+ \varepsilon\geq\varepsilon_{\mathrm{new}}:=\RJ-0.60246
+ =0.009912435695794524549321\ldots,
+ \qquad \varepsilon<\RJ-1/2,
+\]
+the desired strict implication holds with the explicit constant $g(\varepsilon)=769/10^8$. The analytic gap \eqref{hyra:factor} and the new radius rows supply larger bounds for larger deficits; the constant here is a convenient uniform choice. A piecewise radius-dependent lower bound is obtained by taking the minimum certified coefficient over all rows intersecting the radius range allowed by the hypothesis, together with the initial analytic interval. One must not apply the last row alone to all smaller radii.
+
+The remaining radius interval has length $0.0099124357\ldots$, about $32.6\%$ shorter than the handoff's interval. This is a refinement of Hyra's established cap method, not a new estimate for $D_m$. Scalar tangent optimization alone would not have produced the improvement. For width $d$, all radii are divided by $d$ and all volume bounds multiplied by $d^3$.
+
+
+
+A floating continuum experiment replaces the vertex chain by the differential envelope
+\[
+ r'(\theta)=-\frac{r\sqrt{4r^2-(r^2+m)^2}}{r^2+m},\qquad r(0)=R.
+\]
+Numerical integration with optimized tangency predicts a crossing near $R=0.6024720085$. This is neither an interval proof nor an upper limit on all possible geometric improvements. At $R=\RJ$ the same computation gives approximately $0.4110405727$, still about $0.00881947$ below $\VM$. It suggests that increasing angular resolution alone in this cap scheme will not settle the conjecture. The $0.60246$ theorem is strengthened to $0.60247$ below; the numerical crossing is not a certified endpoint.
+
+\section{Joint deficits and geometric continuation}
+For the actual $m=1-R^2$, \eqref{hyra:opposite} gives
+\[
+ D_m=\int_{\partial K}\frac{R^2-|x-n|^2}{|x|^2+1-R^2}\dd S\geq0.
+\]
+For a smooth support function,
+\[
+ x=p u+\nabla p,\quad
+ D_m=\int_{\Sph}\frac{R^2-(p-1)^2-|\nabla p|^2}{p^2+|\nabla p|^2+1-R^2}
+ \det(\nabla^2p+pI)\dd\sigma.
+\]
+Only the boundary-integral version is used for arbitrary nonsmooth bodies. In radial coordinates the joint density can also be written
+\begin{equation}\label{hyra:jointdensity}
+ \Et+D_m=\int_{\Sph}\left[a\rho^3+b-\rho^2\sqrt{1+|\nabla\log\rho|^2}\right]\dd\sigma,
+\end{equation}
+using the radial area formula almost everywhere. The separate nonnegative deficits have cancelled the transport term; this form displays how the remaining problem depends on gradients as well as radial values.
+
+\paragraph{A precise missing inequality.}
+Define
+\[
+ H(m,s):=(3a-2)\VM-\left(\frac{2\pi}{3}-4\pi b\right).
+\]
+For a fixed actual radius, proving $\Et+D_m>H(m,s)$ would prove $V>\VM$ by \eqref{hyra:joint}. The task is to obtain that estimate from geometric constraints, rather than from the volume conclusion itself. At $m=5/8$, $s=0.50026$,
+\[
+ H\simeq0.08069339974517,\qquad
+ 2\pi\Delta_{\mathrm{E2}}\simeq0.04939802002159.
+\]
+Thus the reconstructed cap certificate leaves about $0.03129538$ of joint deficit unaccounted for in this comparison. Both displayed estimates here are Arb-enclosed in the audit calculation; they are diagnostic, not estimates of the actual deficits of a minimizer. The positive remainder cannot be supplied by merely citing $D_m\geq0$.
+
+\paragraph{Using all contacts without double counting.}
+For fixed contact directions, containment in all four unit balls gives the pointwise upper bound
+\[
+ U(v)=\min\left\{R,\min_i\left[R(u_i\cdot v)+\sqrt{1-R^2+R^2(u_i\cdot v)^2}\right]\right\}.
+\]
+Let $L(v)$ be the maximum of $1-R$ and every applicable lower bound from the four vertex chains. For a realizable body, $L\leq\rho\leq U$. Therefore
+\[
+ G(\rho(v))\geq
+ \begin{cases}
+ G(L(v)),&L(v)>s,\\
+ G(U(v)),&U(v)<s,\\
+ 0,&L(v)\leq s\leq U(v).
+ \end{cases}
+\]
+Integrating this single pointwise envelope handles overlapping same-sign caps correctly. It is a valid reduction, not a computed uniform improvement: one still needs rigorous integration and minimization over admissible balanced contact Gram matrices. No overlap correction has been silently omitted in the certified result.
+
+\paragraph{Checks on example bodies.}
+The saved results in \path{results/deficit_benchmarks.json} test \eqref{hyra:joint} numerically for the ball and smooth rotational support functions
+\[
+ p(u)=\tfrac12+tP_3(u_z),\qquad P_3(x)=\tfrac12(5x^3-3x),\qquad t=0.02,0.05.
+\]
+The principal curvature radii are $1/2+5tx(3-4x^2)$ and $1/2-5tx^3$, positive for these amplitudes, so these are legitimate constant-width examples. A conservative containing radius is used; minimality of that radius is unnecessary for the identity. Gaussian quadrature at 128 and 256 nodes gives residuals below $10^{-11}$ for the joint identity and Blaschke identity. These are numerical consistency checks, not certificates for a continuum family. Formula \eqref{hyra:interpolation} also checks compatibility of the new bound with both Meissner interpolation families. Direct numerical integration of $D_m$ and $\Et$ on the two nonsmooth Meissner surfaces has not been performed; these initial benchmarks do not supply a separate lower estimate.
+
+\section{Quantitative contact rigidity and the endpoint}
+At $R=\RJ$, balance gives four weights at most $1/4$, hence all equal to $1/4$. Each balance equation, together with $u_i\cdot u_j\geq-1/3$, forces all six off-diagonal products to equal $-1/3$. Thus $K$ contains a regular unit tetrahedron. Conversely such containment and Jung's inequality force $R=\RJ$. This argument concerns containment, not symmetry of the whole body.
+
+
+\section{Final circumradius estimate}\label{radius:radiusfinal}
+The final certificate adds ten
+adjacent rational slabs of length $10^{-6}$ covering
+$[0.60246,0.60247]$. Each uses the existing exact cap verifier with
+$s=4872/10000$, angular parameter $N=153600$, and radial denominator
+$10^{12}$. The integer chains are saved under
+\texttt{results/certificates/JR00.json.gz} through \texttt{JR09.json.gz}
+and replayed without a floating candidate search.
+
+Combining those slabs with the existing coverage below $0.60246$ proves
+\[
+ \boxed{R(K)\leq0.60247\quad\Longrightarrow\quad V(K)>\VM.}
+\]
+Thus every global volume minimizer satisfies
+\[
+ 0.60247<R(K_*)\leq0.612372435695794\ldots.
+\]
+The last new slab has coefficient
+$1336460360333/10^{13}$ multiplying $\pi$, with gap above $\VM$
+greater than $1.3590\times10^{-6}$. The machine-readable output records
+the minimum over all new slabs and the inherited previous bound.
+This is a numerical-resolution refinement of the established Hyra
+certificate, not a new geometric consequence of Jiang's theorem.
+The remaining radius interval shrinks by only $10^{-5}$.
+
+All ten new chains were replayed when generated. The earlier proof is inherited; its 63 chain
+hashes and interval adjacency are checked, rather than rerunning all of
+its arithmetic. Scalar comparisons for the new rows are checked with
+Arb at 128 and 256 bits. The closed-form profile identity is verified
+symbolically. Floating crossing computations are stored separately.
+
+
+\part{Jiang comparison, generating contacts, and endpoint repair}
+
+\section{What Jiang's inequalities actually imply}
+Jiang's supplied manuscript \cite{Jiang} gives $V\geq B(D)$ near Jung, with
+$D=\sum_{i<j}(1-|x_i-x_j|^2)$ and
+$D\leq16\delta/(1-8\delta)$, $\delta=3/8-R^2$.
+On its domain $0\leq D\leq0.06$, $B$ decreases, and the scalar audit gives
+\[
+ B(D)\leq B(0)=0.417517028699847\ldots
+ <\VM=0.419860045965080\ldots.
+\]
+Consequently this inequality, even at $D=0$, cannot contradict the
+competitive-volume condition $V\leq\VM$. It excludes no additional
+near-Jung radii by that comparison. The transition radius $0.610388$
+is a junction between two proof estimates; it is not a lower bound on
+the radius of a volume minimizer.
+
+The sharper geometric repair proved below gives
+an endpoint completion $L$ with
+\[
+ |V(L)-V(K)|\leq\pi h(\delta),\qquad
+ h(\delta)=12.2077252583\ldots\delta+O(\delta^2).
+\]
+Its improved constant does not determine whether repair increases or
+decreases volume. That sign remains the missing ingredient.
+
+\subsection{The closed-form radial profile is the existing transport profile}
+For fixed actual radius $R$, put $m=1-R^2$,
+$\alpha=(1-2R^2)/(2R)$, $\gamma=\sqrt{R^2-\alpha^2}$, and
+\[
+ A(\theta)=\alpha\cos\theta+\gamma\sin\theta,\qquad
+ L(\theta)=\sqrt{m+A(\theta)^2}-A(\theta).
+\]
+On the increasing branch of $A$, set $v=L(\theta)$. Then
+\[
+ A=\frac{m-v^2}{2v},\qquad
+ L'=-\frac{2v^2\sqrt{1-m-A^2}}{v^2+m}
+    =-\frac{v\sqrt{4v^2-(v^2+m)^2}}{v^2+m}.
+\]
+The equality follows from the polynomial identity
+$4v^2(1-m-A^2)=4v^2-(v^2+m)^2$.
+Together with $L(0)=R$, this identifies Jiang's profile with the
+continuum Hyra transport profile already used in this project.
+Jiang makes its integration more explicit, but this does not constitute
+a stronger independent cap constraint that can be added to the old one.
+
+Floating quadrature with optimized tangent parameter gives the following
+values for the shared cap estimate. These are diagnostics, not certified
+pointwise bounds or proofs of optimality of the scalar search.
+\begin{center}
+\begin{tabular}{cc}
+\toprule
+$R$ & optimized continuum cap expression\\
+\midrule
+$0.60246$ & $0.4198710588$\\
+$0.60247$ & $0.4198618879\text{ (approximately)}$\\
+$0.604$ & $0.4184637556$\\
+$0.606$ & $0.4166522874$\\
+$0.610388$ & $0.4127561684$\\
+$\RJ$ & $0.4110405727$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The crossing with $\VM$ is numerically $R\simeq0.6024720085$.
+This is a limitation observed for these independent cap estimates,
+not an upper limit on every possible radial method.
+
+
+\section{Corners must be generators}\label{jiang:corners}
+Write $\B(S)=\bigcap_{s\in S}\overline B(s,1)$.
+A standard finite Meissner polyhedron based on an extremal diameter-one set
+$X$ has the representation $M=\B(S)$, where $S$ is $X$ together with the
+closed circular centre arcs chosen from the dual pairs. Their endpoints are
+in $X$. This is the construction in \cite[Section 4]{HyndDensity}.
+
+\begin{lemma}[A corner belongs to any compact centre set]\label{jiang:corner}
+Let $K$ have constant width one and $K=\B(S)$ for compact $S$.
+If $N_K(p)$ has nonempty interior in $\R^3$, then $p\in S$.
+\end{lemma}
+\begin{proof}
+For a unit vector $u$ in the interior of $N_K(p)$, the opposite support
+point is $p-u$. Indeed its displacement from $p$ has projection one and
+length at most the diameter one. As $u$ varies over an open spherical set
+$U$, the points $p-u$ form a unit spherical patch on $\partial K$.
+At $y=p-u$, any supporting normal annihilates the two tangent directions
+of this patch and hence is its outward normal $-u$.
+
+There is an active ball at $y$: otherwise compactness of $S$ would give
+$\max_{s\in S}|y-s|<1$, making $y$ interior. For an active $s$,
+$y-s$ is a unit supporting normal, so $y-s=-u$ and $s=p$.
+\end{proof}
+
+\begin{proposition}[No new full-dimensional corners]
+Every point $p$ of a finite Meissner polyhedron $M$ whose normal cone has
+nonempty interior belongs to its specified generating set $X$.
+\end{proposition}
+\begin{proof}
+First $S\subset M$. For $s\in S$, the definition $M=\B(S)$ gives
+$|s-y|\leq1$ for every $y\in M$, hence $s\in\B(M)=M$; the last equality
+is the standard completeness identity for constant width, also proved in
+Jiang's Section 3. Lemma~\ref{jiang:corner} puts $p$ in $S$. If $p\notin X$,
+it is interior to a centre arc $\gamma\subset M$ with $\gamma'(0)\ne0$.
+Every $v\in N_M(p)$ satisfies $v\cdot\gamma'(0)=0$, by differentiating
+the supporting inequality from both sides. This confines the normal cone
+to a plane, a contradiction.
+\end{proof}
+
+\begin{corollary}[The requested tetrahedral inclusion]\label{jiang:tetra}
+If a finite Meissner polyhedron based on $X$ contains a unit regular
+tetrahedron $\{p_1,p_2,p_3,p_4\}$, then all four points belong to $X$.
+In particular $R(M)=\RJ$ implies $K_4\subset D(X)$.
+\end{corollary}
+\begin{proof}
+For $j\ne i$, $M\subset\overline B(p_j,1)$, and the ball touches at $p_i$.
+Thus $p_i-p_j\in N_M(p_i)$. These three vectors are linearly independent:
+their Gram matrix has diagonal one, off-diagonal $1/2$, and determinant
+$1/2$. Their positive cone has interior. Apply the proposition.
+Jung equality supplies such a tetrahedron when $R(M)=\RJ$.
+\end{proof}
+This proof treats every generating representation of the same body.
+It does not assume that a rounded boundary point inherits a normal cone
+from the original ball polyhedron.
+
+\section{A stronger result: all circumcontacts are generators}
+The published boundary decomposition \cite[Proposition 4.5]{HyndDensity} has
+the following content needed here: within each closed smoothing wedge,
+$\partial M$ is the corresponding spindle boundary; outside the union of
+those wedges it agrees locally with $\partial\B(X)$. The vertices of the
+extremal ball polyhedron belong to $X$, including the designated dangling
+vertices. We use that description at the seams as well as on open patches.
+
+\begin{lemma}[A circular curve excludes an enclosing-sphere contact]\label{jiang:curve}
+Suppose $K\subset\overline B(o,R)$ and $p\in K\cap\partial B(o,R)$.
+There is no two-sided, unit-speed $C^2$ curve $\gamma\subset K$ through
+$p$ with $|\gamma''(0)|<1/R$.
+\end{lemma}
+\begin{proof}
+The function $|\gamma(t)-o|^2$ has a local maximum at zero, but its
+second derivative there is
+\[
+ 2+2(p-o)\cdot\gamma''(0)\geq2(1-R|\gamma''(0)|)>0.
+\]
+\end{proof}
+
+\begin{theorem}[Generator circumcontacts and radius identity]\label{jiang:radius}
+For every finite Meissner polyhedron $M$ generated by $X$, all contacts of
+its minimum enclosing sphere belong to $X$. Moreover $M$ and $X$ have the
+same minimum enclosing ball. In particular
+\[
+ \boxed{R(M)=R(X).}
+\]
+\end{theorem}
+\begin{proof}
+Take a circumcontact $p\notin X$. Jung gives $R(M)\leq\RJ<\sqrt3/2$.
+There are three exhaustive possibilities from the boundary decomposition.
+
+If $p$ is in a closed smoothing wedge, then it is on
+$\partial\Sp(a,b)\setminus\{a,b\}$ for two generators $a,b$.
+The meridian of this spindle through $p$ is a radius-one circular arc
+joining $a$ to $b$, and $p$ is interior to that arc. The whole spindle is
+in $M$: an intersection of unit balls is spindle convex and contains its
+generators. Hence there is a two-sided radius-one curve in $M$ through
+$p$. This argument also covers wedge-boundary seams; it does not require
+the curve to stay in the open wedge.
+
+Otherwise $p$ is outside the closed union of smoothing wedges and a
+neighborhood of $p$ agrees with the original ball-polyhedron boundary.
+If $p$ is in a face interior, use a small great-circle arc on its unit
+sphere. If $p$ is in an edge interior, use its edge circle. The latter has
+radius $\sqrt{1-|a-b|^2/4}\geq\sqrt3/2$, since its two face centres
+$a,b$ lie in the diameter-one set $X$. The remaining possibility is a
+vertex, which would already be in $X$.
+
+Every case supplies a curve contradicting Lemma~\ref{jiang:curve}.
+For the assertion about balls, let $o,R$ be the minimum circumball of
+$M$. Its contacts admit positive balancing weights $\lambda_i$ with
+$\sum\lambda_i p_i=o$ and $\sum\lambda_i=1$. They are in $X$. For any
+other proposed center $z$,
+\[
+ \max_{x\in X}|x-z|^2\geq\sum_i\lambda_i|p_i-z|^2
+ =R^2+|z-o|^2.
+\]
+Since $X\subset M\subset\overline B(o,R)$, the same ball is minimal for
+$X$, with the same unique center.
+\end{proof}
+
+The argument is analytical, not a sampled curvature check. It applies to
+every finite standard Meissner smoothing, including dangling generators.
+It does not extend a generator statement to a Hausdorff limit with no
+specified finite generating set.
+
+Two consequences are useful for the proposed synthesis. First, smoothing
+choices for a fixed $X$ have identical circumradius. A radius-constrained
+optimization can therefore compute $R(X)$ directly from its finite points.
+Second, above $1/\sqrt3$, the four balanced contacts used by Jiang may be
+chosen in $X$ itself. Thus near-Jung geometry localizes four actual
+generators, rather than four unknown points on a rounded surface.
+Also, deleting a dangling generator cannot increase the circumradius of
+any subsequent smoothing: the finite generating set only shrinks.
+This settles the radius-comparison issue explicitly left open in the
+earlier near-Jung note; it does not give volume monotonicity for general
+generator deletions.
+
+
+\section{An explicit completion operator}
+For a compact set $A$, put
+\[
+ \B(A)=\bigcap_{a\in A}\overline B(a,1).
+\]
+The following construction applies to a compact set carrying the whole shrunken body.
+
+\begin{lemma}[Ball-dual completion]\label{completion:completion}
+Suppose $A$ is nonempty and $\operatorname{diam}A\leq1$ and $A\subset B_{\RJ}(0)$. Write
+$P=\B(A)$ and $P^*=\B(P)$. Then
+\[
+ h_P(u)+h_{P^*}(-u)=1,
+\]
+and
+\begin{equation}\label{completion:operator}
+ \mathcal C(A):=\tfrac12(P+P^*)
+\end{equation}
+is a constant-width-one body containing $A$.
+\end{lemma}
+\begin{proof}
+The ball $B_{1-\RJ}(0)$ lies in $P$, so the defining ball inequalities have a common strict interior point. Fix a support point $x$ of $P$ with unit outer normal $u$. The normal-cone formula for a compact intersection of balls gives $u$ as a normalized convex combination $\bar n/|\bar n|$ of active unit normals $n_i=x-a_i$.
+For completeness, this formula follows by separating $u$ from the cone of active normals if it were outside that cone, perturbing the separating direction toward the strict interior point, and obtaining a feasible direction with positive $u$ component, a contradiction. Compactness supplies uniform feasibility for nearby inactive constraints. A finite combination then suffices by finite-dimensional conic Caratheodory.
+
+For $z\in P$, put $d=z-x$. Active ball inequalities imply
+$|d|^2+2\bar n\cdot d\leq0$. Since $|\bar n|\leq1$,
+\[
+ |d|^2+2u\cdot d\leq |d|^2(1-|\bar n|^{-1})\leq0.
+\]
+Thus $|z-(x-u)|\leq1$ for all $z\in P$, so $x-u\in P^*$.
+This proves $h_P(u)+h_{P^*}(-u)\geq1$; the reverse inequality follows from $|x-y|\leq1$ for $x\in P,y\in P^*$. Both $P$ and $P^*$ contain $A$: the first follows from its diameter, the second from the definition of $P$. Their Minkowski midpoint contains $A$, and the support identity gives width one.
+\end{proof}
+This operation uses all of $A$. It is distinct from the four-contact dual state in Hynd's evolution, which loses the completion data.
+
+\section{Volume control without a quadratic Hausdorff remainder}
+\begin{proposition}\label{completion:volumeLip}
+For any two width-one convex bodies $K,L\subset\mathbb R^3$,
+\begin{equation}\label{completion:lipschitz}
+ |V(K)-V(L)|\leq\pi d_H(K,L).
+\end{equation}
+\end{proposition}
+\begin{proof}
+Let $K_t=(1-t)K+tL$, which also has width one, and let $v=p_L-p_K$. Minkowski's first variation of volume gives
+\[
+ \frac{\dd}{\dd t}V(K_t)=\int_{\Sph}v\dd S_{K_t}.
+\]
+Write the support as $p=1/2+g$, with $g$ odd, and put
+\[
+ Q(g)=\int_{\Sph}(\tfrac12|\nabla g|^2-g^2)\dd\sigma.
+\]
+Surface area is at most $\pi$ in the width-one class: $S=\pi-Q(g)$ and $Q\geq0$ modulo translations. Thus the derivative has absolute value at most $\pi\|v\|_\infty$, and integration proves the claim. The mixed-volume identity is valid for nonsmooth bodies as well. Alternatively, subdivide the Minkowski segment into $N$ pieces, apply Steiner's outer-parallel-body bound to each piece, and let $N\to\infty$; the quadratic and cubic errors vanish.
+\end{proof}
+
+\section{Jiang's deficit sharpens static repair}
+This improvement holds for arbitrary width-one bodies in the surviving
+band $0.60246<R\leq\RJ$, without a finite-polyhedron assumption.
+Place the circumcenter at zero, choose four balanced contacts $x_i$, and put
+$b=\frac14\sum x_i$, $P=I-\mathbf1\mathbf1^T/4$.
+Let $\Delta$ have off-diagonal entries $1-|x_i-x_j|^2$ and zero diagonal.
+The centered contact Gram matrix is
+\[
+ G=\tfrac12(P+P\Delta P),\qquad D=\sum_{i<j}\Delta_{ij}.
+\]
+Jiang's Lemma 3.1 proves
+\begin{equation}\label{jiang:jiang}
+ |b|\leq\frac{D}{4\sqrt{2+D}},\qquad
+ D\leq D_*(\delta):=\frac{16\delta}{1-8\delta},\quad
+ \delta=3/8-R^2.
+\end{equation}
+These statements hold on our whole band. To check the $D<1$ prerequisite
+without circularity, the contact weight estimate
+$\lambda_i\leq1/4+2\delta$ implies $|b|\leq6\delta$, so
+$D=16\delta+16|b|^2\leq16\delta+576\delta^2<1$ there.
+
+For completeness, the sharp centroid estimate has a short matrix proof.
+Writing $r=\Delta\mathbf1$ and $z=(r-(D/2)\mathbf1)/8$ gives
+$|b|^2=z^T(G|_{\mathbf1^\perp})^{-1}z$.
+This is convex in the six deficits at fixed $D$, by its variational
+formula as a supremum of affine functions. On a simplex vertex with
+one nonzero deficit, $|z|^2=D^2/64$ and $Gz=(2+D)z/4$.
+Their common value is $D^2/[16(2+D)]$; convexity proves the bound.
+
+\begin{lemma}[Total-deficit spectral estimate]\label{jiang:spectral}
+On $\mathbf1^\perp$,
+\[
+ -D I\preceq P\Delta P\preceq (D/2)I.
+\]
+\end{lemma}
+\begin{proof}
+For a unit deficit on one edge, the three eigenvalues on this subspace
+are $-1,0,1/2$. Every nonnegative six-edge deficit of total $D$ is a
+convex combination of the six such matrices scaled by $D$. The two
+matrix inequalities are preserved by convex combinations.
+\end{proof}
+
+\begin{proposition}[Improved alignment]\label{jiang:align}
+After an orthogonal alignment of a centered unit regular tetrahedron
+$\{q_i\}$, the contacts satisfy
+\[
+ \max_i|x_i-q_i|\leq s(D):=
+ \frac{D}{4\sqrt{2+D}}+\RJ(1-\sqrt{1-D}).
+\]
+Consequently the right side can be replaced by $s(D_*(\delta))$.
+\end{proposition}
+\begin{proof}
+Let $Q$ have rows $q_i$ and $X_c$ have rows $x_i-b$. Then
+$QQ^T=P/2$, $Q^TQ=I/2$, and $X_c=QA$ for a $3\times3$ matrix $A$.
+Lemma~\ref{jiang:spectral} places the squared singular values of $A$ in
+$[1-D,1+D/2]$. Its orthogonal polar factor $O$ satisfies
+$\|A-O\|\leq1-\sqrt{1-D}$: the latter exceeds
+$\sqrt{1+D/2}-1$ on $0\leq D<1$. Bound each row of $Q(A-O)$ by
+$\RJ\|A-O\|$ and add \eqref{jiang:jiang}. Both terms defining $s$ increase
+with $D$.
+\end{proof}
+
+\begin{theorem}[Sharper static repair]\label{jiang:repair}
+For any width-one $K$ with $0.60246<R(K)\leq\RJ$, a width-one body $L$
+containing an exact unit regular tetrahedron can be constructed with
+\begin{align}
+ d_H(K,L)&\leq h(\delta):=
+ \frac{R\,s(D_*(\delta))}{1-\RJ+s(D_*(\delta))},\label{jiang:h}\\
+ |V(K)-V(L)|&\leq\pi h(\delta),\qquad h(\delta)\leq14.022\delta.
+\end{align}
+Furthermore,
+\[
+ h(\delta)=
+ \frac{\RJ(2\sqrt2+8\RJ)}{1-\RJ}\,\delta+O(\delta^2)
+ =12.2077252583\ldots\,\delta+O(\delta^2).
+\]
+\end{theorem}
+\begin{proof}
+Use the ball-dual completion proved above. Here is the construction and its inclusion estimate.
+Write $\sigma=s(D_*(\delta))$, $\lambda=(1-\RJ)/(1-\RJ+\sigma)$,
+and $T=\{q_i\}$. For $y\in K$,
+\[
+ |\lambda y-q_i|\leq\lambda|y-x_i|+
+       \lambda|x_i-q_i|+(1-\lambda)|q_i|
+ \leq\lambda(1+\sigma)+(1-\lambda)\RJ=1.
+\]
+Thus $A=\lambda K\cup T$ has diameter one and lies in the Jung ball.
+The previously proved completion operator gives
+\[
+ L=\tfrac12\bigl(\B(A)+\B(\B(A))\bigr),\qquad A\subset L,
+\]
+with constant width one. The support inclusion $p_L\geq\lambda p_K$
+and its antipodal version, using width one, imply
+$|p_L-p_K|\leq(1-\lambda)R$, which is \eqref{jiang:h}.
+Volume is $\pi$-Lipschitz in Hausdorff distance within the width-one class,
+as proved above by Minkowski first variation and area $\leq\pi$.
+
+For the uniform constant put $\delta_m=3/8-0.60246^2$ and
+$D_m=D_*(\delta_m)$. Rationalizing $1-\sqrt{1-D}$ gives
+\[
+ \frac{h(\delta)}{\delta}\leq
+ \frac{\RJ}{1-\RJ}\frac{16}{1-8\delta_m}
+ \left(\frac1{4\sqrt2}+\frac{\RJ}{1+\sqrt{1-D_m}}\right)
+ <14.022.
+\]
+The final strict bound is enclosed with Arb at 128 and 256 bits.
+Expanding $s$ and $D_*$ gives the stated asymptotic coefficient.
+\end{proof}
+
+For comparison the earlier estimate was $h\leq29\delta$, with leading
+coefficient $23.2181630740$. At $\delta=10^{-6}$, \eqref{jiang:h} is
+$1.2207576367\ldots\times10^{-5}$ instead of
+$2.3218\ldots\times10^{-5}$. This improves proximity to some endpoint
+completion. It supplies neither the sign $V(L)\leq V(K)$ nor membership
+of $L$ in the restricted canonical-refinement class.
+
+\section{Exact finite objective and the remaining obstruction}
+For exposed geometric dual pairs, define
+\[
+ \theta(e)=2\arcsin(|e|/2),\qquad
+ f(s,t)=t\cos(t/2)\arcsin\frac{\sin(s/2)}{\cos(t/2)},\quad
+ H(s,t)=\max\{f(s,t),f(t,s)\}.
+\]
+Bogosel's formula \cite{BogoselVolume} gives
+\[
+ \mathcal F(X)=\sum_{(e,e')}H(\theta(e),\theta(e')),
+ \quad A_{\min}(X)=2\pi-2\mathcal F(X),\quad
+ V_{\min}(X)=2\pi/3-\mathcal F(X).
+\]
+For $a=\pi/3$,
+\[
+ \mathcal F(T)=3H(a,a)=\frac{\pi\sqrt3}{4}\arccos(1/3).
+\]
+Thus the endpoint target is precisely
+$X\supset T\Rightarrow\mathcal F(X)\leq\mathcal F(T)$.
+The radius theorem makes $X\supset T$ equivalent to $R(M)=\RJ$ for a
+finite Meissner body. It does not prove the objective inequality or
+classify all of its equality cases.
+
+\paragraph{One original-arc split has equality, not a positive cost.}
+Let $r=\sqrt3/2$, $\Phi=\arccos(1/3)$, and
+$\psi(t)=2\arcsin(r\sin(t/2))$. Splitting an original centre arc into
+positive angles $t_j$ with $\sum_j t_j=\Phi$ gives
+\[
+ H(\psi(t_j),a)=f(\psi(t_j),a)=\frac{ar t_j}{2},\qquad
+ \sum_j H(\psi(t_j),a)=H(a,a).
+\]
+Here $\psi(t_j)\leq a$, so the optimal branch is the displayed one;
+this is the neutral dangling refinement mechanism of \cite{BogoselDangling}.
+It covers any finite number of subdivisions of the same arc, not an
+arbitrary two-dimensional partition. Angles $\theta(e)$ are spherical
+chord angles, whereas the $t_j$ are circle parameters; confusing them
+would give a false additive rule.
+
+\paragraph{A precise discontinuity below Jung.}
+By Theorem~\ref{jiang:radius}, the four near-Jung contacts belong to $X$.
+Let $C$ be those four generators, $k=|X\setminus C|$, and
+$m=6-e(C)$, the number of missing contact diameters. Extremality gives
+the exact count
+\begin{equation}\label{jiang:count}
+ e(X\setminus C)+e(C,X\setminus C)=2k+m.
+\end{equation}
+After deleting degree-two points outside $C$ as long as possible, assume
+there are still $k$ points outside $C$. They have degree at least three,
+and \eqref{jiang:count} therefore implies
+\[
+ e(X\setminus C)\geq k-m.
+\]
+At exact Jung equality, $m=0$, forcing a cycle when $k>0$.
+For arbitrarily small positive metric deficits, $m$ need not vanish.
+Thus Jiang's $D=O(\delta)$ does not restore the protected-extremal-base
+counting argument: closeness of an edge length to one is not an exact
+diameter incidence. The identity quantifies the missing combinatorial
+input, rather than assuming that it is a small perturbation of the
+endpoint graph theorem.
+
+
+\section{A quantitative substitute for the locked first derivatives}
+Here is a new direct adaptation to approximate contact tetrahedra. It uses only the diameter constraint and hence does not assume an extremal graph.
+
+\begin{proposition}[Approximate support constraints]\label{approx:locking}
+Let $x_i,x_j\in K$ and $d_j=x_i-x_j$, where $K$ has width one. Fix nonnegative weights $a_j$, $A=\sum_j a_j>0$, and suppose
+\[
+ u=\frac{\sum_j a_jd_j}{|\sum_j a_jd_j|},\qquad
+ \kappa=\frac{|\sum_j a_jd_j|}{A}>0,\qquad
+ e=\max_j(1-|d_j|^2).
+\]
+For the support point $x_K(u)=p(u)u+\nabla p(u)$,
+\begin{equation}\label{approx:jetbounds}
+ |x_K(u)-x_i|\leq\sqrt e,\qquad
+ 0\leq p(u)-x_i\cdot u\leq\frac{e}{2\kappa}.
+\end{equation}
+\end{proposition}
+\begin{proof}
+For $v=x_K(u)-x_i$, the inequalities $|x_K(u)-x_j|\leq1$ give
+\[
+ 2d_j\cdot v+|v|^2\leq1-|d_j|^2.
+\]
+Multiply by $a_j/A$ and sum to obtain
+\[
+ 2\kappa u\cdot v+|v|^2\leq e.
+\]
+Since $x_i\in K$, $u\cdot v\geq0$. Both conclusions follow.
+\end{proof}
+For the four circumcontacts, $e\leq D\leq D_*(\delta)$, so the support-point error is at most $\sqrt{D_*(\delta)}=O(\sqrt\delta)$, and the support-value error is at most $D_*(\delta)/(2\kappa)=O(\delta)$ on any uniformly nondegenerate cone. These are approximate boundary data, not a signed area comparison.
+
+\part{The endpoint square cell and restricted stability}
+
+\section{At the endpoint, only one square-cell problem is needed}
+The cell decomposition in the working notes \cite{Local} gives the following independent-filling reduction. For an exact extremal base, the support function and its first derivatives are fixed on the normal polygons generated by diameter neighbors. The remaining antipodal rectangle pairs can be filled independently under $0\preceq\nabla^2p+pI\preceq I$.
+
+For a regular unit tetrahedron all three pairs have the same two chord lengths $a=b=1$. In gnomonic coordinates the domain is the square
+\[
+ D=[-1/\sqrt2,1/\sqrt2]^2,\qquad g(x,y)=\sqrt{1+x^2+y^2},
+\]
+and the filling satisfies
+\begin{equation}\label{endpoint:split}
+ 0\preceq D^2\phi\preceq D^2g,
+\end{equation}
+with $c=L=1/\sqrt2$ and the boundary first jets
+\begin{align*}
+ y=\pm L:&\quad \phi=c\pm y/2,\qquad \nabla\phi=(0,\pm1/2),\\
+ x=\pm L:&\quad \phi=g\mp x/2,\qquad \nabla\phi=\nabla g\mp(1/2,0).
+\end{align*}
+Set
+\[
+ C(\phi)=\int_Dg\,[\det D^2\phi+\det D^2(g-\phi)]\dd x\dd y.
+\]
+The canonical cost is
+\begin{equation}\label{endpoint:canonical}
+ C_{\rm can}=4\arcsin(1/3)-\frac{\pi\sqrt3}{6}\arccos(1/3)
+ =0.242990933531077569\ldots.
+\end{equation}
+The fixed contribution is $P_T=2\pi-12\arcsin(1/3)$, and any completion satisfies
+\[
+ S(K)=P_T+C(\phi_1)+C(\phi_2)+C(\phi_3).
+\]
+Consequently the endpoint completion inequality is equivalent to the single assertion
+\begin{equation}\label{endpoint:squaretarget}
+ \boxed{C(\phi)\geq C_{\rm can}\quad\hbox{for every admissible filling of this square}.}
+\end{equation}
+Sufficiency follows by summing. For necessity, a better single filling could be glued to canonical fillings on the other two cells to produce a better tetrahedron-containing completion. Thus universal inclusion monotonicity for every possible rectangle is stronger than the endpoint theorem needed here.
+
+This is a substantial simplification of the target, but not a finite-dimensional problem. The filling is an arbitrary admissible function. Nor is this the thin-rectangle regime: both original chord lengths are maximal, rather than small. Thin rectangles can occur in subdivisions and may be treated by the local asymptotic theorem, but their total error must be summed and controlled; radius localization does not itself make every cell thin.
+
+\paragraph{Why independent gluing is valid.}
+On the normal triangle at a tetrahedron vertex $x_i$, the support point is $x_i$: a positive combination of the three unit diameter normals is still supporting there. On the antipodal triangle, constant width prescribes the opposite spherical patch. The remaining normal regions are the three paired squares above. Matching boundary values and gradients makes a piecewise filling globally $C^{1,1}$; no singular Hessian appears at a seam. The radius matrix is nonnegative on every piece, hence distributionally on the sphere. Its homogeneous extension is convex and defines a support function. The antipodal identity enforces width one, while the preserved forced jets retain the tetrahedron. Conversely any completion has exactly these constraints. The forced triangles contribute $P_T$, giving the area decomposition above.
+
+\section{The exact problem and the restricted class}
+For a dual pair of chord lengths $0<a\leq b\leq1$, put
+\[
+ \begin{gathered}
+ c=\sqrt{1-(a^2+b^2)/4},\quad k_a=\sqrt{1-a^2/4},\quad k_b=\sqrt{1-b^2/4},\\
+ D_{a,b}=[-a/(2c),a/(2c)]\times[-b/(2c),b/(2c)].
+ \end{gathered}
+\]
+Set $G=\sqrt{1+x^2+y^2}$ and
+\[
+ W=\operatorname{cof}D^2G=\frac{I+zz^{\mathsf T}}{G^3},\qquad
+ \Dir(v)=\int_{D_{a,b}}\nabla v^{\mathsf T}W\nabla v\dd x\dd y.
+\]
+A filling has $0\preceq D^2\phi\preceq D^2G$, and the boundary first jets
+\[
+ \begin{array}{ll}
+ y=\pm b/(2c):&\phi=c\pm by/2,\quad\nabla\phi=(0,\pm b/2),\\
+ x=\pm a/(2c):&\phi=G\mp ax/2,\quad\nabla\phi=\nabla G\mp(a/2,0).
+ \end{array}
+\]
+The canonical lower and upper fillings are
+\begin{align}
+ \phi_-&=\begin{cases}c+G-k_b\sqrt{1+x^2},&|y|\leq b\sqrt{1+x^2}/(2k_b),\\
+ c+b|y|/2,&\text{otherwise},\end{cases}\label{cell:minus}\\
+ \phi_+&=\begin{cases}k_a\sqrt{1+y^2},&|x|\leq a\sqrt{1+y^2}/(2k_a),\\
+ G-a|x|/2,&\text{otherwise}.\end{cases}\label{cell:plus}
+\end{align}
+They are feasible and bound every feasible filling pointwise. To see the upper bound, $G-\phi$ is convex and its two vertical boundary supporting planes give $\phi\leq G-a|x|/2$. At fixed $y$ this obstacle has equal minima at $x=\pm a\sqrt{1+y^2}/(2k_a)$. Convexity of $\phi$ bounds it by their horizontal chord between those points, producing $\phi_+$. On its central strip,
+\[
+ D^2\phi_+=\operatorname{diag}(0,k_a/(1+y^2)^{3/2}),\qquad
+ \det(D^2G-D^2\phi_+)=G^{-4}-k_a/(G^3\sqrt{1+y^2})\geq0.
+\]
+The last inequality is precisely the strip condition. Outside it the complement is affine; first derivatives agree on the interfaces. Swapping coordinates and applying the same argument to $G-\phi$ yields $\phi_-$. This also verifies the prescribed boundary jets. Write $w=\phi_+-\phi_-$, $v=\phi-\phi_-$, and
+\[
+ C(\phi)=\int_D G[\det D^2\phi+\det D^2(G-\phi)].
+\]
+For clamped differences,
+\begin{equation}\label{cell:quadratic}
+ C(\phi_-+v)-C(\phi_-)=\ell(v)-\Dir(v),\quad
+ \ell(v)=2\int_Dv\,W:D^2(\phi_--G/2).
+\end{equation}
+The square problem $a=b=1$ has $C(\phi_+)=C(\phi_-)=C_{\rm can}$.
+The desired general inequality remains $\ell(v)\geq\Dir(v)$.
+
+For a fixed tetrahedron, a cell difference extended oddly to its antipodal cell and by zero elsewhere has spherical energy
+\[
+ \Q(h)=\int_{\Sph}(\tfrac12|\nabla h|^2-h^2)\dd\sigma=\Dir(v).
+\]
+This fixes all normalization factors below. In particular area gaps are twice volume gaps.
+
+The restricted class studied in Sections~\ref{cell:thin}--\ref{cell:refinements} is explicit. Choose the three centre arcs of an original Meissner completion of the regular tetrahedron. Subdivide these same arcs into finitely many pieces. On each resulting paired normal cell use either canonical filling or any convex mixture of the two, with independent mixing coefficients. Keep the forced support data. No new centres away from the original arcs are allowed in this class. The cells glue by their common first jets. The underlying finite sets are extremal: each added point already has its two unit-distance neighbours among the original vertices; the diameter-edge bound rules out additional incidences. The preferred choices reproduce the original Meissner completion because the subdivided centre arcs have the same union as before.
+
+\section{The stability constant one fails even for a smooth interior perturbation}
+The proposed square-cell stability estimate has the form
+\begin{equation}\label{cell:stability}
+ C(\phi)-C_{\rm can}\geq c_*
+ \min\{\Dir(\phi-\phi_-),\Dir(\phi-\phi_+)\}.
+\end{equation}
+The canonical segment alone permits $c_*=1$. Asymmetry rules out that value.
+
+Let $\phi_0=(\phi_-+\phi_+)/2$. Take a nonzero function $h$ supported in a sufficiently small central box, odd in $x$, even in $y$, and with zero first jet at the box boundary. Both Hessians of $\phi_0$ are strictly positive definite on a fixed small central box. Thus $\phi_0+\varepsilon h$ is admissible for sufficiently small $|\varepsilon|$. Reflection parity gives
+\[
+ \ell(h)=0,\qquad \int_D\nabla w^{\mathsf T}W\nabla h=0.
+\]
+Consequently, with $d=\varepsilon^2\Dir(h)>0$,
+\begin{equation}\label{cell:ratio}
+ C(\phi_0+\varepsilon h)-C_{\rm can}=\tfrac14\Dir(w)-d,
+ \qquad
+ \Dir(\phi_0+\varepsilon h-\phi_\pm)=\tfrac14\Dir(w)+d.
+\end{equation}
+The ratio in \eqref{cell:stability} is strictly less than one. This analytic argument alone disproves the constant one; it does not require computation.
+
+\subsection{An explicit certified asymmetric filling}
+Set $r=1/2$, $\varepsilon=13/10000$, and define
+\[
+ h(x,y)=\begin{cases}
+ \displaystyle\frac{x}{r}\left(1-\frac{x^2}{r^2}\right)^2
+                        \left(1-\frac{y^2}{r^2}\right)^2,& |x|,|y|\leq r,\\
+ 0,&\text{otherwise}.
+ \end{cases}
+\]
+This is $C^{1,1}$ with a clamped first jet. Its support lies inside both central canonical strips. There
+\[
+ D^2\phi_0=\frac12D^2G+\frac12
+ \operatorname{diag}\left(-\frac{k}{(1+x^2)^{3/2}},
+                          \frac{k}{(1+y^2)^{3/2}}\right),\qquad k=\sqrt3/2.
+\]
+Interval evaluation on 4,474 dyadic boxes, of maximum subdivision depth seven, verifies positive definiteness of
+$D^2\phi_0+\varepsilon D^2h$ and $D^2G-D^2\phi_0-\varepsilon D^2h$ throughout the box. Outside it admissibility is already known. The check closes at both 128 and 256 bits. The dyadic partition is saved in \path{results/cell_bump_certificate.json.gz}. It is a continuum curvature certificate, not a check at mesh nodes.
+
+Exact polynomial integration gives
+\[
+ \int_{[-r,r]^2}|\nabla h|^2=\frac{131072}{155925}.
+\]
+Since $W\succeq(2/3)^{3/2}I$ there,
+\[
+ d\geq\left(\frac{13}{10000}\right)^2
+       \left(\frac23\right)^{3/2}\frac{131072}{155925}
+       >7.7329284\cdot10^{-7}.
+\]
+An interval Riemann enclosure of $\Dir(w)$ gives
+\[
+ 0.00229080<\Dir(w)<0.00311049.
+\]
+These deliberately conservative bounds and \eqref{cell:ratio} prove
+\begin{equation}\label{cell:smoothcupper}
+ \boxed{\text{any universal constant in \eqref{cell:stability} must satisfy }c_*<0.9981.}
+\end{equation}
+The example still has area strictly above $C_{\rm can}$, certified by the same enclosure and the upper bound $d\leq\varepsilon^2(131072/155925)$.
+Floating quadrature gives the more indicative values
+\[
+ d\simeq1.32968330169\cdot10^{-6},\quad
+ C(\phi)-C_{\rm can}\simeq0.000673318515,\quad
+ \text{ratio}\simeq0.9960658970.
+\]
+Only the interval conclusions are used as certificates. The asymmetry lowers the midpoint's positive area excess; it supplies no counterexample to canonical minimality.
+
+\section{A stronger benchmark from one dangling point}\label{cell:benchmark}
+A canonical refinement gives a larger obstruction to the size of the constant. Choose tetrahedron vertices
+\[
+ A_\pm=(\pm1/2,0,0),\qquad B_\pm=(0,\pm1/2,1/\sqrt2).
+\]
+On the centre arc from $A_-$ to $A_+$, insert the point
+\[
+ z=\left(\frac{-101+7\sqrt{502}}{300},\ 0,\
+          \frac{49\sqrt2-7\sqrt{251}}{300}\right).
+\]
+Direct calculation gives $|z-B_\pm|=1$, $|z-A_-|=7/10$, and
+$|z-A_+|^2=0.1177500298876\ldots<1$. Thus the five-point set is extremal, with the new point dangling. It divides one original square cell pair into two refined pairs; their long dual chords are both one.
+
+Choose the preferred canonical filling everywhere except on the refined pair with short chord $a=7/10$, where the other canonical filling is chosen. Let $v$ be its support difference from the original preferred completion, and $w$ the original unsplit canonical difference. Then
+\[
+ \Gamma=C-C_{\rm can}=\Delta(7/10),\qquad
+ \Q(v)=d(7/10).
+\]
+The functions $d$ and $\Delta$ are defined in the next section. The Hilbert norm triangle inequality implies
+\[
+ \Q(w-v)\geq\big(\sqrt{\Q(w)}-\sqrt{\Q(v)}\big)^2.
+\]
+Consequently $4d(7/10)\leq d(1)$ is sufficient to identify $\Q(v)$ as the smaller of the two endpoint distances. Continuum interval integration certifies
+\[
+ \begin{split}
+ 0.0005374021&<d(7/10)<0.0006074176,\\
+ d(1)&>0.0025666757,\\
+ \Delta(7/10)&<0.000247357248.
+ \end{split}
+\]
+In particular $d(1)-4d(7/10)>0.00013700$, and
+\begin{equation}\label{cell:cupper}
+ \boxed{c_*\leq\frac{\Delta(7/10)}{d(7/10)}<0.461}
+\end{equation}
+for any constant valid for all square-cell fillings, and also for any constant valid throughout the original-arc refinement class below. The computed interval upper bound for the ratio is $0.4602832891\ldots$; floating quadrature suggests the actual ratio $0.4321842110\ldots$.
+
+The geometric feasibility follows from the explicit constant-width construction and the matching first jets, with exact algebraic distance checks for $z$. The energy bounds use interval integration over entire rectangles, with $768^2$ boxes in each positive quadrant. This example is not a counterexample to area minimality: its excess is strictly positive. It prevents pursuing an excessively strong stability inequality.
+
+\section{Thin canonical cells retain energy coercivity}\label{cell:thin}
+Fix $b=1$, put $k=\sqrt3/2$, and let $a\downarrow0$. Denote
+\[
+ d(a)=\Dir(\phi_+-\phi_-),\qquad
+ \Delta(a)=C(\phi_+)-C(\phi_-).
+\]
+The area formula gives
+\begin{equation}\label{cell:gap}
+ \Delta(a)=2\left[\frac\pi3 k\arctan\frac{a}{\sqrt{3-a^2}}
+ -2\arcsin(a/2)\sqrt{1-a^2/4}\arctan\frac1{\sqrt{3-a^2}}\right].
+\end{equation}
+The strict canonical branch comparison gives $\Delta(a)>0$ for $0<a<1$ \cite{BogoselVolume,BogoselDangling}.
+
+\begin{proposition}[Thin-cell energy and gap]\label{cell:thinasymptotic}
+As $a\downarrow0$,
+\begin{align}
+ d(a)&=d_3a^3+O(a^5),&
+ d_3&=\frac1{6\sqrt3}-\frac\pi{18}+\frac{\log3}{8\sqrt3},\label{cell:d3}\\
+ \Delta(a)&=\gamma_3a^3+O(a^5),&
+ \gamma_3&=\frac{5\pi}{108}-\frac1{4\sqrt3}.\label{cell:gap3}
+\end{align}
+Both coefficients are positive, and
+\begin{equation}\label{cell:thinratio}
+ \lim_{a\downarrow0}\frac{\Delta(a)}{d(a)}
+ =\frac{\gamma_3}{d_3}=1.131854075544600756\ldots>1.13.
+\end{equation}
+\end{proposition}
+\begin{proof}
+The expansion of \eqref{cell:gap} directly gives \eqref{cell:gap3}. For the energy, rescale $x=a\xi$, put $s=\sqrt{1+y^2}$ and $\beta=1/\sqrt3$. On the limiting rectangle
+$|\xi|\leq1/(2k)$, $|y|\leq\beta$, the function $w/a^2$ tends to
+\[
+ F(\xi,y)=\begin{cases}
+ (1/k-s)/8+\xi^2(k-1/s)/2,&|\xi|\leq s/2,\\
+ (k/2)(|\xi|-1/(2k))^2,&s/2\leq|\xi|\leq1/(2k).
+ \end{cases}
+\]
+Moreover $w_x/a\to F_\xi$, while $w_y=O(a^2)$ uniformly. The moving strip and outer boundaries shift by $O(a^2)$ in these coordinates. The clipped expressions for the gradients are continuous and Lipschitz across the strip boundaries, so the normalized gradient errors are $O(a^2)$ uniformly on a fixed containing rectangle. This justifies the $O(a^5)$ energy remainder, including the moving boundaries.
+
+The leading coefficient is
+\[
+ \int_{-\beta}^{\beta}\frac1{s^3}
+ \int_{-1/(2k)}^{1/(2k)}F_\xi^2\dd\xi\dd y.
+\]
+Splitting the inner integral at $s/2$ gives
+\[
+ \int_{-1/(2k)}^{1/(2k)}F_\xi^2\dd\xi
+ =\frac{(1-ks)^2}{12k}.
+\]
+The resulting elementary integral is
+\[
+ \frac1{6k}\left[\frac{y}{\sqrt{1+y^2}}-2k\arctan y
+                  +k^2\operatorname{arsinh}y\right]_0^\beta,
+\]
+which is \eqref{cell:d3}. Positivity and the numerical separation in \eqref{cell:thinratio} are enclosed by Arb at 128 and 256 bits.
+\end{proof}
+It follows that for all sufficiently small $a$, every canonical mixture satisfies the one-branch estimate
+\begin{equation}\label{cell:thincoercive}
+ C(\phi_-+t w)-C(\phi_-)\geq\frac{11}{10}\Dir(tw),
+ \qquad0\leq t\leq1.
+\end{equation}
+Indeed the left side is $t\Delta(a)+t(1-t)d(a)$, while $\Dir(tw)=t^2d(a)$. The threshold in this existence statement is not explicitly certified here.
+
+For orientation, the targeted floating checks are:
+\begin{center}
+\begin{tabular}{rrr}\toprule
+$a$ & $d(a)/a^3$ & $\Delta(a)/d(a)$\\\midrule
+$0.5$ & $0.001301812233$ & $0.719434945$\\
+$0.2$ & $0.001026034383$ & $1.054979659$\\
+$0.1$ & $0.000989617331$ & $1.112162127$\\
+$0.05$ & $0.000980621374$ & $1.126900499$\\
+$0.02$ & $0.000978110183$ & $1.131060121$\\\bottomrule
+\end{tabular}
+\end{center}
+The table tests the asymptotic formulas; it does not certify a uniform interval of chord lengths.
+
+\section{Uniform stability under arbitrary original-arc subdivision}\label{cell:refinements}
+Consider one centre arc of an original Meissner tetrahedron. Its circle radius is $k=\sqrt3/2$ and its angular length is
+\[
+ \Phi=\arccos(1/3).
+\]
+A subarc of angular length $\alpha$ has chord
+$a(\alpha)=2k\sin(\alpha/2)$. Its dual chord remains one.
+For a partition $\sum_j\alpha_j=\Phi$, let $w_j$ be the canonical difference on that subcell, extended as an odd spherical support difference and by zero outside its cell pair. These supports have disjoint interiors, so their energy cross terms vanish. Let $w$ denote the unsplit canonical difference.
+
+We use three uniform facts, established next:
+\begin{enumerate}
+\item $\Q(w_j)=d(a(\alpha_j))\leq C\alpha_j^3$.
+\item For every $\epsilon_0>0$, the ratio $\Delta(a(\alpha))/d(a(\alpha))$ has a positive lower bound on $0<\alpha\leq\Phi-\epsilon_0$.
+\item If one subarc has length $\Phi-\epsilon$, its difference $w_b$ satisfies
+\begin{equation}\label{cell:biglimits}
+ \Q(w-w_b)\leq C\epsilon^2,\qquad
+ \Delta(a(\Phi-\epsilon))\geq\kappa\epsilon
+\end{equation}
+for sufficiently small $\epsilon$, uniformly in its position along the original arc, for some $C,\kappa>0$.
+\end{enumerate}
+The first two statements follow from Proposition~\ref{cell:thinasymptotic}, continuity, and strict positivity of the branch gap away from the unsplit endpoint. Thus the number of tiny subarcs does not enter their constants.
+
+\begin{lemma}[Control near the unsplit cell]\label{cell:nearsquare}
+The two estimates in \eqref{cell:biglimits} hold.
+\end{lemma}
+\begin{proof}
+Differentiating \eqref{cell:gap} at $a=1$ gives
+\[
+ -\Delta'(1)=
+ \left(2-\frac{\sqrt3\pi}{9}\right)\arctan(1/\sqrt2)
+ -\frac{\sqrt6\pi}{9}
+ =0.003807295804395225\ldots>0.
+\]
+Also $a'(\Phi)=1/\sqrt2$. This proves the linear gap, with any fixed $\kappa$ below the limiting arc coefficient
+$0.002692164681270955\ldots$, after shrinking the neighborhood.
+
+For the energy estimate, the endpoints of a subarc of length $\Phi-\epsilon$ differ from the original endpoints by $O(\epsilon)$: the two omitted endpoint lengths are nonnegative and sum to $\epsilon$. The adapted orthonormal frame, gnomonic chart, and chord parameter consequently differ by $O(\epsilon)$, uniformly over the position of the subarc.
+
+Here is a direct regularity justification for comparing the support differences across moving cell boundaries. For $a$ in a compact neighborhood of one, formulas \eqref{cell:minus}--\eqref{cell:plus} and their first spatial derivatives are jointly Lipschitz in $(a,x,y)$ on the relevant compact coordinate set. Each branch is smooth with bounded derivatives, and first spatial derivatives agree on the switching interfaces. Extend $w_a$ by zero outside $D_{a,1}$. This extension and its gradient are still jointly Lipschitz in the parameter: one can first clip $x,y$ to the corresponding rectangle, since $w_a$ and its whole first jet vanish on its boundary. The change in the clipped coordinates is $O(|\Delta a|)$.
+
+Multiplication by the smooth gnomonic factor and the $O(\epsilon)$ change of frame preserve this estimate on a fixed containing spherical chart; extend by zero beyond it and use oddness on the opposite chart. Thus
+$\|w-w_b\|_{C^1(\Sph)}\leq C\epsilon$, and hence $\Q(w-w_b)\leq C\epsilon^2$. This argument concerns the explicit canonical differences, not general solutions of a moving-boundary PDE.
+\end{proof}
+
+\begin{theorem}[Uniform two-branch stability for canonical arc refinements]\label{cell:main}
+There is a constant $c_{\rm ref}>0$, independent of the partition size and mixing coefficients, such that the following holds. On each refined cell take the canonical mixture with coefficient $0\leq t_j\leq1$, and put
+$v=\sum_jt_jw_j$. Relative to the original preferred filling, its total area excess $\Gamma$ satisfies
+\begin{equation}\label{cell:refstable}
+ \Gamma\geq c_{\rm ref}\min\{\Q(v),\Q(w-v)\}.
+\end{equation}
+Thus both original canonical choices are allowed as reference endpoints.
+\end{theorem}
+\begin{proof}
+Write $d_j=\Q(w_j)$, $\Delta_j=\Delta(a(\alpha_j))$. Exact quadratic interpolation and disjoint supports give
+\begin{equation}\label{cell:sums}
+ \Gamma=\sum_j[t_j\Delta_j+t_j(1-t_j)d_j],\qquad
+ \Q(v)=\sum_jt_j^2d_j.
+\end{equation}
+Choose a small fixed $\epsilon_0<\Phi/2$ so that \eqref{cell:biglimits} holds.
+If every $\alpha_j\leq\Phi-\epsilon_0$, Fact 2 above gives
+$\Delta_j\geq\rho d_j$, with $\rho>0$ independent of $j$ and the partition. Then $t_j\Delta_j\geq\rho t_j^2d_j$, proving the result in this case.
+
+Otherwise a unique big subarc has length $\Phi-\epsilon$ with $0\leq\epsilon<\epsilon_0$; the remaining lengths sum to $\epsilon$. Let $t$ be its mixing coefficient and $d_b=\Q(w_b)$. The remaining cells satisfy a uniform positive ratio bound. If $t\leq1/2$, the big cell contributes at least $t^2d_b$ because $t(1-t)\geq t^2$, and the remaining cells control their $t_j^2d_j$. This again bounds $\Q(v)$ by a constant times $\Gamma$.
+
+Suppose $t\geq1/2$, and put $\eta=1-t\leq1/2$ and
+$v_s=\sum_{j\ne b}t_jw_j$. The big cell gives
+\[
+ \Gamma\geq\tfrac12\kappa\epsilon+\tfrac12\eta d_b.
+\]
+On the other hand, Fact 1 and $\sum_{j\ne b}\alpha_j=\epsilon$ imply
+\[
+ \Q(v_s)\leq\sum_{j\ne b}d_j\leq C\epsilon^3.
+\]
+The quadratic form $\Q$ is a Hilbert norm squared modulo translations on odd functions. Therefore
+\begin{align*}
+ \Q(w-v)
+ &=\Q((w-w_b)+\eta w_b-v_s)\\
+ &\leq3\{C\epsilon^2+\eta^2d_b+C\epsilon^3\}\\
+ &\leq3C(1+\epsilon_0)\epsilon_0\epsilon+\tfrac32\eta d_b.
+\end{align*}
+This is bounded by a fixed multiple of $\Gamma$. Taking the smallest positive constant from the cases proves \eqref{cell:refstable}. At $\epsilon=0$ the same argument includes the unrefined canonical segment. No bound on the number of small cells is used.
+\end{proof}
+The constant is established to exist; no numerical value for $c_{\rm ref}$ is certified in this note. The explicit one-point example proves that a constant valid throughout this refinement class must be below $0.461$. The existence proof does not select a numerical value.
+
+\section{An endpoint volume-stability consequence for this class}
+Apply the preceding theorem independently to the three original centre arcs. Let $\mathcal M_T$ be the finite set of the eight canonical completions of the fixed tetrahedron (two congruence types). For every body $K$ in the stated refinement-mixture class,
+\begin{equation}\label{cell:globalenergy}
+ V(K)-\VM\geq\frac{c_{\rm ref}}2
+ \min_{M\in\mathcal M_T}\Q(p_K-p_M).
+\end{equation}
+The minimization separates into independent branch choices in the three original cells, which explains why the minimum of the total energy equals the sum of the three local minima. This estimate also passes to the Hausdorff closure of the class: width-one supports are uniformly $C^{1,1}$ after normalization, so uniform convergence implies $C^1$ convergence and energy convergence.
+
+One can convert \eqref{cell:globalenergy} to a weaker but explicit-exponent Hausdorff statement. If $h=p_K-p_M$ for two completions of the same tetrahedron, their difference vanishes with its first jet on the forced normal set. The existing cell Poincare estimate gives
+\[
+ \Q(h)\geq3\|h\|_{L^2(\Sph)}^2.
+\]
+Let $A=\|h\|_\infty=d_H(K,M)$. Both bodies lie in the Jung ball, so $A<1$. Their curvature matrices lie between zero and $I$, and consequently
+$\|\nabla^2 h\|_{\rm op}\leq1+|h|<2$ almost everywhere. At a maximum of $|h|$, after changing sign, $h=A$ and $\nabla h=0$. On the geodesic cap of radius $\sqrt{A/2}$, $h\geq A/2$. The antipodal cap has $h\leq-A/2$ and is disjoint. The elementary bound $1-\cos r\geq r^2/4$ for $0\leq r\leq1$ yields
+\[
+ \|h\|_2^2\geq\frac{\pi A^3}{8},\qquad
+ \Q(h)\geq\frac{3\pi A^3}{8}.
+\]
+Combining this with \eqref{cell:globalenergy} proves
+\begin{equation}\label{cell:globalhausdorff}
+ \boxed{V(K)-\VM\geq\frac{3\pi c_{\rm ref}}{16}
+                 d_H(K,\mathcal M_T)^3.}
+\end{equation}
+This is a uniform endpoint stability result for the specified class, rather than merely an area ordering for each finite subdivision.
+
+
+\section{The cell coercivity input}
+Each paired rectangle lies in a spherical cap of angular radius $\pi/4$, since $c\geq1/\sqrt2$. On this cap $z=\cos^2\theta-1/2$ is positive in the interior, vanishes on the boundary, and satisfies $-\Delta z=6z+1\geq8z$. The positive-test-function identity, followed by density, gives
+\[
+ \int_Q|\nabla v|^2\dd\sigma\geq8\int_Qv^2\dd\sigma,
+ \qquad v\in H^1_0(Q).
+\]
+Thus the spherical quadratic form on a zero-boundary cell is at least $3\|v\|_{L^2(Q)}^2$. For paired odd differences this agrees with the gnomonic Dirichlet form used above. This proves the coercivity input without reliance on an external working file.
+
+\part{Fixed diameter graphs, spherical products, and circle stars}
+
+\section{The objective in the paper}
+We use the fixed-graph problem of Bogosel \cite{BogoselGraphs}, not the optimally
+smoothed area objective. Write
+\[
+ P_{\mathcal E}(X)=\sum_{\{e,e'\}\in\mathcal E}\theta_e\theta_{e'},
+ \qquad \theta_{ij}=2\arcsin(|x_i-x_j|/2).
+\]
+The compact labelled feasible set is
+\[
+ \mathcal A(\mathcal D)=\{X:\ \sum_i x_i=0,\quad
+ |x_i-x_j|=1\ (ij\in\mathcal D),\quad |x_i-x_j|\leq1\ (i<j)\}.
+\]
+The distinct geometric stratum additionally retains the actual exposed
+dual-pair list $\mathcal E$ and the complete diameter graph $\mathcal D$.
+At collisions, the formal labelled objective need not equal the intrinsic
+objective of the reconstructed core. The paper explicitly separates
+these formulations in Sections 2.2 and 4.2.3.
+
+The desired common-optimizer statement for the labelled problem is
+\begin{equation}\label{fixed:common}
+ \max\{R(X):X\in\operatorname{argmax}_{\mathcal A(\mathcal D)}
+                         P_{\mathcal E}\}=\RJ.
+\end{equation}
+This asks for at least one product maximizer of maximal circumradius;
+the assertion that every product maximizer has that radius is stronger.
+Neither is proved here. The radius target itself, however, can be
+identified exactly for every extremal diameter graph.
+
+\section{Maximal radius is always feasible in the labelled relaxation}
+\begin{proposition}\label{fixed:colour}
+If $\mathcal D$ is an extremal diameter graph in $\R^3$, then
+\[
+ \max_{X\in\mathcal A(\mathcal D)}R(X)=\sqrt{3/8}.
+\]
+\end{proposition}
+\begin{proof}
+Such a graph has chromatic number four, by the graph result recalled
+in the proof of the paper's convergence proposition. Take a proper
+four-colouring $c$ and a unit regular tetrahedron $\{t_1,t_2,t_3,t_4\}$.
+Set $x_i=t_{c(i)}$ and subtract the labelled centroid. Every required
+diameter joins different colour classes and therefore has length one.
+Every other distance is zero or one. All four colours occur, so the
+distinct-point set is exactly a translated unit tetrahedron and has
+circumradius $\RJ$. Jung's inequality gives the reverse bound for every
+feasible configuration.
+\end{proof}
+
+This construction permits collisions. It proves neither that this
+placement is a limit of the original geometric stratum nor that it
+maximizes $P_{\mathcal E}$. Its formal value is
+$N_c(\pi/3)^2$, where $N_c$ counts the prescribed dual pairs whose
+four endpoints receive four distinct colours. A term is zero whenever
+one of its two endpoint pairs has the same colour. On the reconstructed
+tetrahedron there are only three intrinsic dual pairs, so multiplicities
+in the formal list must not be retained without justification.
+
+If $\mathcal D$ already contains $K_4$, every distinct realization has
+radius $\RJ$ and the radius question is settled trivially for that graph.
+If $\mathcal D$ has no $K_4$, no point of its exact distinct geometric
+stratum can attain $\RJ$: Jung equality would introduce a tetrahedron,
+contrary to its complete diameter graph. A positive answer must then
+involve a limiting change of stratum, as the paper's conjecture allows.
+
+\section{An exact formula for radius and its variation}
+\begin{proposition}\label{fixed:dualradius}
+For any finite configuration, putting $q_{ij}=|x_i-x_j|^2$ gives
+\[
+ \boxed{R(X)^2=\max_{\lambda\geq0,\ \sum_i\lambda_i=1}
+                   \sum_{i<j}\lambda_i\lambda_j q_{ij}.}
+\]
+If $\Lambda(X)$ denotes the maximizing weights, the directional derivative
+along velocities $v_i$ is
+\[
+ D(R^2)(X)[v]=\max_{\lambda\in\Lambda(X)}
+ 2\sum_i\lambda_i(x_i-o)\cdot v_i,
+\]
+where $o$ is the minimum enclosing-ball center.
+\end{proposition}
+\begin{proof}
+For any weights with barycenter $b$, their variance is
+$\sum_i\lambda_i|x_i|^2-|b|^2
+=\sum_{i<j}\lambda_i\lambda_j q_{ij}$.
+It is at most $R^2$ by writing it as
+$\sum_i\lambda_i|x_i-o|^2-|b-o|^2$.
+Balanced circumsphere contacts provide weights attaining equality.
+Every maximizing weight system is supported on contacts and has
+barycenter $o$, by the same equality. The directional formula follows
+by differentiating the maximum of these smooth expressions over the
+compact weight simplex. It includes nonunique contact representations.
+\end{proof}
+
+By contrast, on a fixed exposed stratum,
+\[
+ DP(X)[v]=2\sum_{i<j}p_{ij}(x_i-x_j)\cdot(v_i-v_j),
+\quad
+ p_{ij}=\sum_{\text{occurrences }ij\leftrightarrow kl}
+ \frac{\theta_{kl}}{\sqrt{q_{ij}(4-q_{ij})}}.
+\]
+Multiplicity is retained in this derivative, and $p_{ij}=0$ when the
+pair does not occur in the objective. Thus $P$ and $R^2$ are increasing
+functions of separate squared-distance variables, but their weights
+are different. Feasible three-dimensional motions couple those variables.
+The two derivative formulas do not imply simultaneous improvement.
+
+\paragraph{Why the dimension constraint is decisive.}
+Let $G=XX^T$ be the centered Gram matrix and
+$H=I-\mathbf1\mathbf1^T/n$. The interpolation
+\[
+ G_t=(1-t)G+(t/2)H
+\]
+has off-diagonal squared distances
+$q_{ij}(t)=(1-t)q_{ij}+t$. It preserves every diameter equality and
+all upper bounds, and increases every positive product with a
+non-diameter factor. But for $t>0$ it has rank $n-1$, so when $n>4$
+it leaves $\R^3$. A proof must supply a rank-three replacement for
+this apparent expansion; coordinatewise monotonicity alone is inadequate.
+
+\section{What one dual pair says about radius}
+The local geometry can be computed exactly. Consider one nondegenerate
+dual pair with squared chords $u,v\in(0,1]$ and four cross diameters.
+Use coordinates
+\[
+ a_\pm=(\pm\sqrt u/2,0,0),\quad
+ b_\pm=(0,\pm\sqrt v/2,c),\qquad
+ c^2=1-(u+v)/4.
+\]
+The equal-distance center is at height $(2-u)/(4c)$; it is a positive
+convex combination of these four vertices. Its radius is therefore the
+minimum enclosing radius of this quadruple, and
+\begin{equation}\label{fixed:pairradius}
+ r_{e,e'}^2=\frac{4-uv}{4(4-u-v)}
+ =\frac12-\frac1{2(\sec\theta_e+\sec\theta_{e'})}.
+\end{equation}
+In particular $r_{e,e'}\leq R(X)$. For a fixed value of this local
+radius, the product is largest when its two angles agree. Indeed
+$x\mapsto\sec(e^x)$ is strictly convex on $e^x\in(0,\pi/3]$, so
+\[
+ \sec s+\sec t\geq2\sec\sqrt{st}.
+\]
+Combining this with \eqref{fixed:pairradius} yields
+\[
+ \theta_e\theta_{e'}\leq
+ \bigl[\arccos(2-4r_{e,e'}^2)\bigr]^2
+ \leq\bigl[\arccos(2-4R(X)^2)\bigr]^2.
+\]
+This is a genuine local product/radius relation, but summing it only
+gives $(n-1)$ times the last expression and is too weak for the desired
+optimizer statement. Moreover a tetrahedron-containing configuration
+can have all its original centre arcs subdivided. Then $R(X)=\RJ$
+while every exposed dual pair has one chord strictly shorter than one,
+so every $r_{e,e'}<\RJ$. The radius cannot in general be detected by
+one term of the product objective.
+
+\section{The constrained Hessian is the relevant missing sign}
+The earlier spherical-product working notes \cite{Local} derive the exact normal form below; it is included as an input to the joint-ascent argument.
+At a regular distinct stationary point, let $T$ be the flex space modulo
+rigid motions, let $F$ be an orthonormal basis for it, and define
+\[
+ u_e=\sqrt{\theta_{e'}/\theta_e}\,d\theta_e|_T,
+ \quad W_{\{e,e'\}}=u_e-u_{e'},\quad
+ C=\sum_e(1-\theta_e\cot\theta_e)u_eu_e^T.
+\]
+For the equilibrium stress $\Omega$,
+\[
+ Q_P=F^T(\Omega\otimes I_3)F-W^TW+C.
+\]
+A local product maximum requires $Q_P\preceq0$.
+With diameter constraints $c_{ij}=(q_{ij}-1)/2$ and stationarity
+$\nabla P=\sum\mu_{ij}\nabla c_{ij}$, the stress has edge weights
+$2p_{ij}-\mathbf1_{ij\in\mathcal D}\mu_{ij}$. Its trace is
+\[
+ \operatorname{tr}\Omega=4\sum_{i<j}p_{ij}(1-q_{ij}).
+\]
+It is positive if some objective factor is a non-diameter. But a positive
+trace of the ambient stress does not settle the restricted quadratic
+form, because the mismatch term is negative and the feasible tangent
+space is constrained. Earlier examples already invalidate simple
+universal trace tests for this product objective.
+
+A sufficient, still unproved local theorem would be:
+\begin{quote}
+Every regular stationary configuration with $R(X)<\RJ$ has a feasible
+flex $v$ such that $Q_P(v)>0$.
+\end{quote}
+This would exclude regular interior product maxima below Jung. It is
+stronger than finding one maximum-radius global maximizer and does not
+handle singular or collision strata. The earlier proposed index theorem
+for non-wheel graphs is a possible approach to this local statement,
+not an established result. Wheel cases also require treatment.
+
+Jiang's total-deficit estimate controls the four supporting contacts
+when $R$ is close to $\RJ$. It does not give a bound on $W$, a
+coercivity estimate for the stress on flexes, or a sign for $Q_P$.
+An application here would need a new inequality connecting those
+contact deficits to this constrained quadratic form.
+
+\section{The exact reduction that would suffice}
+On the compact labelled feasible set, choose a product maximizer with
+largest circumradius. To prove \eqref{fixed:common}, it would suffice to
+construct from any such point with $R<\RJ$ another labelled feasible
+point $Y$ with $P_{\mathcal E}(Y)\geq P_{\mathcal E}(X)$ and
+$R(Y)>R(X)$. Proposition~\ref{fixed:colour} guarantees the ultimate radius
+target is attainable, but not an objective-preserving route to it.
+
+For the intrinsic problem, the appropriate scalar version is a
+maximizing sequence in the original geometric stratum whose radii tend
+to $\RJ$, together with preservation of the intrinsic objective under
+core reconstruction. Any finite limit with radius $\RJ$ contains a
+unit tetrahedron, and those four vertices survive core pruning because
+each has its other three tetrahedral vertices as diameter neighbours.
+Thus the radius-limit condition gives the containment part of the
+paper's fixed-graph conjecture. Value preservation is an additional
+requirement; a formal labelled maximum is insufficient by itself.
+
+This project therefore has a concrete radius formulation of the product
+conjecture, a proof that the labelled radius target is feasible for every
+graph, and exact derivative and local pair formulas. It does not yet
+have a proof that product maximization forces maximal radius. No
+optimization, graph enumeration, or other heavy computation was run
+for this note; its elementary algebra was checked symbolically.
+
+
+\section{Setup and an enclosing-ball lower bound}
+Let $\mathcal S$ be a regular, distinct, fixed-diameter stratum in
+$\R^{3n}$, with constraints
+\[
+ c_{ij}(X)=\frac{|x_i-x_j|^2-1}{2}=0,
+ \qquad ij\in\mathcal D.
+\]
+All remaining distances are strictly below one. Where the exposed
+dual-pair list is locally fixed, put
+\[
+ P(X)=\sum_{\{e,e'\}\in\mathcal E}\theta_e\theta_{e'},
+ \qquad \theta_{ij}=2\arcsin(|x_i-x_j|/2).
+\]
+Let $F$ be an orthonormal basis of the infinitesimal flex space modulo
+rigid motions and $J$ the diameter Jacobian. At a stationary point of
+$P|_{\mathcal S}$, write
+\[
+ \nabla P=J^T\mu,\qquad
+ Q_P=F^T\left(\nabla^2P-\sum_{d\in\mathcal D}\mu_d\nabla^2c_d\right)F.
+\]
+The preceding section gives the stress/mismatch normal form for $Q_P$.
+Here we connect the constrained Hessian to circumradius.
+
+Fix any nonnegative weights $\lambda_i$ with sum one and define
+\[
+ b_\lambda(Y)=\sum_i\lambda_i y_i,\qquad
+ V_\lambda(Y)=\sum_i\lambda_i|y_i|^2-|b_\lambda(Y)|^2
+ =\sum_{i<j}\lambda_i\lambda_j|y_i-y_j|^2.
+\]
+For every $Y$,
+\begin{equation}\label{product:variancebound}
+ V_\lambda(Y)\leq R(Y)^2.
+\end{equation}
+Indeed, relative to the minimum-ball center $o_Y$, the left side is
+$\sum_i\lambda_i|y_i-o_Y|^2-|b_\lambda(Y)-o_Y|^2$.
+Equality holds at $X$ precisely when positive weights are on contacts
+of its enclosing sphere and $b_\lambda(X)=o_X$.
+Call such a weight system a \emph{balanced contact representation}.
+
+For such a representation, with $o=o_X$,
+\begin{equation}\label{product:grad}
+ \nabla_i V_\lambda(X)=2\lambda_i(x_i-o),\qquad
+ g_\lambda=F^T\nabla V_\lambda(X).
+\end{equation}
+Thus $g_\lambda\cdot v>0$ already proves an increase of $R^2$
+along a curve with velocity $Fv$. This remains true with more than four
+contacts or a nonsmooth radius function: we only use the smooth lower
+bound \eqref{product:variancebound}, touching $R^2$ at $X$.
+
+\section{A joint-ascent lemma}
+\begin{proposition}\label{product:joint}
+Suppose $X$ is a regular stationary point of $P|_{\mathcal S}$.
+If $Q_P$ has a positive eigenvalue and some balanced contact
+representation satisfies $g_\lambda\ne0$, there is a feasible smooth
+curve $X(t)$, $X(0)=X$, for which
+\[
+ P(X(t))>P(X),\qquad R(X(t))>R(X)\qquad(0<t\ll1).
+\]
+\end{proposition}
+\begin{proof}
+Take $v$ with $Q_P(v)>0$ and orient it so that
+$g_\lambda\cdot v\geq0$. For sufficiently small $\varepsilon>0$,
+\[
+ w=v+\varepsilon g_\lambda/|g_\lambda|
+\]
+satisfies both $Q_P(w)>0$ and $g_\lambda\cdot w>0$.
+Regularity provides a feasible curve with initial velocity $Fw$.
+Its product has zero first derivative and positive second derivative.
+Its contact variance has positive first derivative. Inequality
+\eqref{product:variancebound}, with equality at $t=0$, proves the radius claim.
+Strict inequalities and a locally fixed exposed stratum persist for
+sufficiently small $t$.
+\end{proof}
+
+This explains why a product-increasing eigenvector need not itself
+increase the radius to first order. Mixing in a small radius-increasing
+component preserves its positive product curvature. In particular,
+the proposal does not require the product and radius gradients to align.
+
+For a unit positive eigenvector with eigenvalue $a>0$, the audit uses
+$\varepsilon=\min(0.1,a/(8\|Q_P\|))$ and then normalizes $w$.
+The estimate
+$Q_P(v+\varepsilon u)\geq a-2\varepsilon\|Q_P\|
+-\varepsilon^2\|Q_P\|>0$ justifies this choice.
+
+\section{A contact-tetrahedron criterion for nonzero radius variation}
+The radius hypothesis of Proposition~\ref{product:joint} has a useful geometric
+sufficient condition.
+
+\begin{proposition}\label{product:peel}
+Let $I$ be an affinely independent four-point support of the minimum
+enclosing ball, with strictly positive balanced weights. Suppose the
+vertices outside $I$ can be successively removed from the diameter graph
+so that, at each removal, the remaining incident edge vectors are
+linearly independent (hence there are at most three).
+If the diameter graph on $I$ is not $K_4$, then $g_\lambda\ne0$ for
+the contact weights supported on $I$.
+\end{proposition}
+\begin{proof}
+If $g_\lambda=0$, Euclidean invariance of $V_\lambda$ implies
+\[
+ \nabla V_\lambda=J^T\nu
+\]
+for some diameter-edge coefficients $\nu$. At a vertex outside $I$,
+the left side is zero. Linear independence of the remaining incident
+vectors forces their coefficients to vanish. Successive removal
+therefore leaves coefficients only on diameter edges within $I$.
+
+On $I$, however,
+\[
+ \nabla V_\lambda=
+ \sum_{i<j,\ i,j\in I}2\lambda_i\lambda_j\nabla c_{ij},
+\]
+where $c_{ij}=(|x_i-x_j|^2-1)/2$ is used here also for non-diameters.
+The six edge rows of a nondegenerate tetrahedron are independent.
+Consequently this expression cannot use just a proper subset of the
+six edges: every displayed coefficient is positive. This contradicts
+the remaining diameter-only representation.
+\end{proof}
+
+Below $\RJ=\sqrt{3/8}$ a supporting tetrahedron cannot have all six
+edges of length one. Above $1/\sqrt3$, a minimum ball needs at least
+four contacts in a balanced representation: a diameter-one triangle
+has minimum enclosing radius at most $1/\sqrt3$. Thus in the radius
+band relevant to a competitive volume, a four-point support is always
+available. The removal hypothesis is the additional condition to check.
+
+This is a sufficient criterion, not a theorem that every extremal
+diameter graph admits such a removal order. It can fail because a
+remaining outside vertex has degree at least four or its edge vectors
+are dependent. In the data, the symmetric seven-point configuration
+with radius about $0.61009324$ has no such removal order for its
+supporting tetrahedron, although its projected radius gradient is
+nonzero. The criterion is not necessary.
+
+Combining Propositions~\ref{product:joint} and~\ref{product:peel}: under the removal
+hypothesis, a positive product-Hessian direction suffices for joint
+ascent below Jung. Radius ascent creates no additional local obstruction
+in this class. The positive product-Hessian direction is still a
+substantive, unproved general requirement.
+
+\section{A second-order certificate when radius derivatives vanish}
+The first-order criterion is not exhaustive. If $g_\lambda=0$, solve
+$\nabla V_\lambda=J^T\nu$ and set
+\begin{equation}\label{product:variancehessian}
+ Q_\lambda=F^T\left[
+ 2\bigl(\operatorname{diag}\lambda-\lambda\lambda^T\bigr)\otimes I_3
+ -\sum_{d\in\mathcal D}\nu_d\nabla^2c_d\right]F.
+\end{equation}
+This is the constrained Hessian of the fixed-weight variance.
+If some $v$ satisfies $Q_P(v)>0$ and $Q_\lambda(v)>0$, the same
+argument proves joint ascent, now with both gains of second order.
+In general $Q_\lambda$ need not be positive semidefinite.
+
+Mixing balanced contact representations can reveal a direction missed
+by each representation separately. For two fixed weight systems,
+\begin{equation}\label{product:mixture}
+ V_{a\lambda+(1-a)\eta}(Y)
+ =aV_\lambda(Y)+(1-a)V_\eta(Y)
+ +a(1-a)|b_\lambda(Y)-b_\eta(Y)|^2.
+\end{equation}
+The additional squared term measures separation of their barycenters.
+
+\begin{lemma}\label{product:triangles}
+Suppose two triples of vertices are unit equilateral triangles
+throughout the diameter stratum. Write their centroids as $b_1,b_2$.
+Then throughout the stratum,
+\begin{equation}\label{product:twotriangles}
+ R(Y)^2\geq\frac13+\frac14|b_1(Y)-b_2(Y)|^2.
+\end{equation}
+If initially $R(X)^2=1/3$, any feasible velocity with
+$\dot b_1\ne\dot b_2$ gives a positive second-order lower bound for
+the increase in squared radius.
+\end{lemma}
+\begin{proof}
+Uniform weights on each unit triangle have variance $1/3$.
+Apply \eqref{product:mixture} with $a=1/2$, then \eqref{product:variancebound}.
+At equality initially, $b_1=b_2$, so the right side increases by
+$t^2|\dot b_1-\dot b_2|^2/4+o(t^2)$.
+\end{proof}
+
+The saved nine-point configuration \texttt{n9\_g3\_critical\_0.npy}
+has this structure, with triangles $(0,5,7)$ and $(0,6,8)$ in zero-based
+labels. Numerically its radius is $1/\sqrt3$, every balanced-contact
+first derivative vanishes, and $Q_P$ is positive definite. With
+$Bv=\dot b_1-\dot b_2$, the mixed-variance Hessian is exactly
+$Q_\lambda=B^TB/2$ under the stated triangle hypotheses. The saved
+array gives its two positive eigenvalues as approximately
+$0.08571168267$ and three zero eigenvalues. The numerical matrix
+identity residual is $1.4\times10^{-16}$ or less. This supplies the
+joint-ascent witness missing from the first-order test.
+
+\section{Small numerical audit and a failed direct direction}
+The audit uses 26 saved critical arrays, retained here in \path{results/product_critical_configurations.json}, and small linear-algebra calculations.
+It recovers the diameter edges from unit distances and the dual pairs
+from reciprocal common-neighbor relations, checking the expected counts.
+No catalogue download or stationary-point search is needed.
+
+One array, \texttt{n7sym\_1\_0.38458708.npy}, has maximum distance
+about $1.57727$ and is excluded as infeasible. Of the other 25 arrays:
+\begin{itemize}
+\item 24 have a nonzero projected contact-variance gradient and receive
+      first-order radius-ascent witnesses by Proposition~\ref{product:joint};
+\item 23 satisfy the contact-tetrahedron removal criterion numerically;
+\item the remaining radius-stationary array receives the two-triangle
+      second-order witness;
+\item all 25 have a positive product-Hessian eigenvalue, as already
+      observed in the previous product investigation.
+\end{itemize}
+These counts refer to saved arrays, not distinct critical orbits or
+an exhaustive enumeration. In particular two saved seven-point arrays
+represent the same critical configuration up to rigid motion.
+
+The largest tangent product-gradient residual is
+$8.1\times10^{-10}$. The smallest singular value of any diameter
+Jacobian is greater than $0.101$, and the smallest non-diameter
+squared-distance slack is greater than $0.00172$.
+For each witness a prescribed step of size $10^{-3}$ is followed by
+a local normal correction of the diameter equations. All corrected
+configurations remain diameter-feasible, with diameter equation
+residuals below $5\times10^{-16}$. Their smallest observed product
+gain is $4.84\times10^{-8}$ and their smallest variance lower-bound
+gain in $R^2$, evaluated in floating point, is
+$4.28\times10^{-8}$. This verifies the local predictions numerically;
+it does not interval-certify stationary points, signs, or exposure
+combinatorics of the finite corrected steps.
+
+\paragraph{Why simply following the radius gradient fails.}
+Six saved feasible arrays have negative product curvature along a
+selected supporting-variance gradient. In particular the symmetric
+seven-point array \texttt{n7sym\_-1\_0.57301217.npy} has a unique
+four-contact representation, so $R^2$ is smooth locally and this is
+the actual radius gradient. Its numerical data are
+\[
+ R=0.6100932414\ldots,\qquad
+ \operatorname{spec}(Q_P)=
+ (-0.83617599,\ 0.32480894,\ 0.32480894).
+\]
+The normalized radius-gradient direction has product curvature
+$-0.83617599\ldots$ and is orthogonal to the positive eigenspace.
+Thus a pure first-order radius-ascent rule would initially decrease
+the product here. Proposition~\ref{product:joint} resolves the obstruction
+by mixing a positive product mode with a small radius component.
+This numerical failure of a particular direction is not a
+counterexample to common global maximizers.
+
+\section{What remains to prove}
+This continuation separates two local issues. For many contact
+configurations, nontrivial radius variation follows from a short
+stress-elimination argument. At first-order radius-stationary
+configurations, mixed contact variances give explicit second-order
+tests. Neither fact establishes the missing product sign
+\[
+ \lambda_{\max}(Q_P)>0
+ \quad\text{at every regular sub-Jung product stationary point.}
+\]
+The earlier proposed product index bound remains a possible way to
+prove this; numerical positive directions are not a substitute.
+Furthermore, local joint ascent at stationary points alone supplies
+neither a globally convergent joint-ascent path nor an exclusion of
+maximizers on singular, collision, or newly contacting strata.
+Formal labelled products can also change their relation to the
+intrinsic objective when the core is reconstructed at a collision.
+
+A precise next proof target is therefore to establish the product
+Hessian sign on a class admitting the contact removal order, then
+control the remaining stress cores and limiting strata. The radius
+part of that local argument is now available under explicit hypotheses.
+
+
+\section{The precise local model}
+Assume the full diameter-neighbor list of $x$ is $y_1,\ldots,y_k$ and
+the full list for $y_i$ is $x,a_i,b_i$. All $a_i,b_i$ are fixed and
+are outside the moving set. Other vertices are fixed too. Thus there
+are no diameter edges between two moving neighbors $y_i,y_j$.
+We work at a distinct realization with strict non-diameter inequalities
+and a locally fixed exposed dual-pair list.
+
+For each $i$, put
+\[
+ m_i=\frac{a_i+b_i}{2},\qquad
+ \rho_i=\sqrt{1-\frac{|a_i-b_i|^2}{4}}.
+\]
+The equations $|y_i-a_i|=|y_i-b_i|=1$ constrain $y_i$ to the circle
+of radius $\rho_i$ in the plane through $m_i$ perpendicular to
+$b_i-a_i$. The remaining equation is $|y_i-x|=1$.
+At a chosen local branch, define
+\[
+ Z_i=\begin{pmatrix}
+ (y_i-a_i)^T\\ (y_i-b_i)^T\\ (y_i-x)^T
+ \end{pmatrix}.
+\]
+We assume $\det Z_i\ne0$. The implicit function theorem then makes
+$y_i=y_i(x)$ smooth. This condition is exactly that the third unit
+sphere cuts the fixed circle transversely.
+
+\section{Exact response to moving the central vertex}
+Let $x(t)=x+th$. The first response matrix is
+\begin{equation}\label{star:response}
+ B_i=D_xy_i
+ =Z_i^{-1}\begin{pmatrix}0_{2\times3}\\(y_i-x)^T\end{pmatrix},
+ \qquad \dot y_i=B_i h.
+\end{equation}
+The last row in the matrix is a row vector. Equivalently, if $\tau_i$
+is a unit tangent to the fixed circle,
+\[
+ B_i h=\tau_i\frac{(y_i-x)\cdot h}{(y_i-x)\cdot\tau_i}.
+\]
+This exhibits the rank-one response and its possible large size near
+tangency. The second response is the bilinear map
+\begin{equation}\label{star:acceleration}
+ A_i(h,k)=D_x^2y_i[h,k]
+ =-Z_i^{-1}\begin{pmatrix}
+ (B_i h)\cdot(B_i k)\\
+ (B_i h)\cdot(B_i k)\\
+ ((B_i-I)h)\cdot((B_i-I)k)
+ \end{pmatrix}.
+\end{equation}
+These identities follow by differentiating the three squared-distance
+constraints once and twice; no critical-point hypothesis is used.
+
+Let $T$ be the full configuration response: its block at $x$ is $I$,
+its block at $y_i$ is $B_i$, and all other blocks vanish. For
+\[
+ P=\sum_{\{e,e'\}\in\mathcal E}\theta_e\theta_{e'},
+ \qquad \theta_e=2\arcsin(|e|/2),
+\]
+the exact three-variable gradient and Hessian are
+\begin{equation}\label{star:starhessian}
+ \boxed{\nabla_x P=T^T\nabla P,\qquad
+ H_{\rm star}[h,k]=(Th)^T\nabla^2P(Tk)
+ +\sum_i\nabla_{y_i}P\cdot A_i(h,k).}
+\end{equation}
+The ambient derivatives include every changing dual-edge product.
+At a full product stationary point with diameter multipliers $\mu$,
+the same formula becomes
+\[
+ H_{\rm star}=T^T\left(\nabla^2P-
+                  \sum_{d\in\mathcal D}\mu_d\nabla^2c_d\right)T,
+ \qquad c_d=(|d|^2-1)/2.
+\]
+The correction in \eqref{star:starhessian} must be retained: circle motion
+has nonzero acceleration, even when $x$ moves on a straight line.
+
+\paragraph{The new local target.}
+A local maximum must satisfy $\nabla_xP=0$ and
+$H_{\rm star}\preceq0$. Therefore it suffices to prove a positive
+eigenvalue at every interior star-stationary configuration. This is a
+three-variable question rather than an $(n-4)$-variable one. Its sign
+does not follow merely from the rank-one form of the $B_i$.
+In fact the trace can be negative, even in the seven-point examples
+below, so a positive-Laplacian argument in the $x$ coordinates fails.
+
+\section{The symmetric seven-point star}
+Let $r=1/\sqrt3$, $\alpha=\pi/3$, and let $u_0,u_1,u_2$ be the planar
+unit vectors at angles $0,2\pi/3,4\pi/3$. Fix
+$A_i=(ru_i,0)$, the vertices of a unit equilateral triangle. Define
+\[
+ B_i(t_i)=\left(\left(-\frac r2+\frac{\sqrt3}{2}\cos t_i\right)u_i,
+                         \frac{\sqrt3}{2}\sin t_i\right).
+\]
+For $\{i,j,k\}=\{0,1,2\}$, both $|B_i-A_j|$ and $|B_i-A_k|$
+are identically one. Thus each $B_i$ moves on precisely the fixed
+circle in the user's proposed construction. Let $C$ be the lower
+intersection of the three unit spheres centered at the $B_i$.
+The moving central vertex is $x=C$, with diameter neighbors $B_i$.
+
+The six dual-pair products are
+\begin{equation}\label{star:sevenobjective}
+ P(t_0,t_1,t_2)=\alpha\sum_i\theta(|A_i-B_i|)
+  +\sum_{i=0}^2
+        \theta(|A_i-C|)\theta(|B_j-B_k|),
+ \quad\theta(z)=2\arcsin(z/2).
+\end{equation}
+In the second sum, for each $i$ the unordered pair $\{j,k\}$ is its
+complement. The symmetric branch has $t_i=t$ with
+\[
+ 0<t<\arccos(1/3).
+\]
+Put
+\begin{gather*}
+ q=-\frac r2+\frac{\sqrt3}{2}\cos t,\quad
+ b=\frac{\sqrt3}{2}\sin t,\quad
+ h=\sqrt{1-q^2},\quad c=b-h,\\
+ B_i=(qu_i,b),\qquad C=(0,0,c),\qquad 0<q<r.
+\end{gather*}
+The remaining chord lengths are
+\[
+ \ell=|A_i-B_i|=\sqrt{1-\sqrt3q},\quad
+ d=|A_i-C|=\sqrt{r^2+c^2},\quad
+ |B_j-B_k|=\sqrt3q.
+\]
+They are strictly less than one in the open interval, while all twelve
+specified diameter edges stay equal to one. The implicit branches are
+regular there. Small changes of the three angles are consequently
+feasible, including
+\begin{equation}\label{star:antimotion}
+ (t_0,t_1,t_2)=(t+\varepsilon,t-\varepsilon,t).
+\end{equation}
+This keeps the circle centers $A_i$ fixed and moves $C$ as required.
+
+To check regularity and the strict inequalities explicitly, write
+$p=q+r/2$ and note $p^2+b^2=3/4$. Then
+$h^2p^2-q^2b^2=p^2-3q^2/4>0$, so $hp-qb>0$.
+This is the nonzero circle-transversality factor.
+Also $dc/dq=-p/b+q/h<0$ in the open interval, so $|c|<\sqrt{2/3}$
+and $d<1$. The three sphere equations defining $C$ have independent
+gradient rows because $q,h>0$. The displayed formulas for $\ell$
+and $\sqrt3q$ give the other strict non-diameter inequalities.
+
+\begin{theorem}[Computer-assisted sign certificate]\label{star:main}
+At every interior symmetric configuration above,
+\[
+ \left.\frac{d}{d\varepsilon}P(t+\varepsilon,t-\varepsilon,t)
+ \right|_{\varepsilon=0}=0,
+ \qquad
+ \left.\frac{d^2}{d\varepsilon^2}P(t+\varepsilon,t-\varepsilon,t)
+ \right|_{\varepsilon=0}>\frac{1}{100q}>0.
+\]
+Hence no such configuration is a local maximum of the spherical-product
+objective in the full three-variable star family. The statement does
+not assume stationarity along the symmetric branch.
+\end{theorem}
+
+The first derivative vanishes by interchange symmetry of indices
+zero and one. The second derivative is certified on the whole interval,
+not only at the three previously saved symmetric critical points.
+The strict inequality is deliberately coarse; its purpose is the sign.
+
+\section{Derivation and certificate for the second derivative}
+Here are the scalar formulas needed to independently reproduce the
+certificate. They also specify exactly what has been certified.
+Write
+\begin{gather*}
+ p=q+\frac r2,\qquad K=qb-hp,\qquad \kappa=K/q,\\
+ a=\frac1{d\sqrt{1-d^2/4}},\qquad
+ \beta=a\left(-\frac1{d^2}+\frac1{4(1-d^2/4)}\right).
+\end{gather*}
+Along \eqref{star:antimotion}, differentiation of $|C-B_i|^2=1$ gives
+\[
+ \dot C_z=0,\quad |\dot C|^2=\frac{4\kappa^2}{3},\qquad
+ \ddot C_z=-\frac{2qp+2hb-3/2+4b\kappa-4\kappa^2}{3h}.
+\]
+For example $\dot C=-(2\kappa/3)(u_0-u_1,0)$, which proves the
+norm identity directly. The angle Hessian for a vector $z$ of length
+$d$ is $aI+\beta zz^T$.
+
+Let $s=\sqrt3q\in[0,1]$ and set
+\[
+ h_g=\sqrt{1-s^2/4},\qquad h_\ell=\sqrt{(3+s)/4},
+ \qquad A(s)=\frac{\theta(s)}q.
+\]
+At $s=0$ use $A(0)=\sqrt3$. Define
+\begin{align*}
+ F_0={}&\frac{4K^2}{3}\left(3a+\frac\beta2\right)
+ -\frac{ac}{h}\left[q^2(2qp+2hb-3/2)+4bKq-4K^2\right],\\
+ G_0={}&\frac32b^2+\sqrt3p+\frac{9q^2b^2}{8h_g^2}.
+\end{align*}
+Then the second derivative $P''_{\rm anti}$ in Theorem~\ref{star:main}
+satisfies the exact identity
+\begin{equation}\label{star:scaledformula}
+ \boxed{qP''_{\rm anti}=
+ -\frac{\alpha q\ell}{8h_\ell^3}
+ +A(s)F_0+\frac{\theta(d)}{\sqrt3h_g}G_0
+ +\frac{2aKb}{h_g}.}
+\end{equation}
+
+For clarity, the four terms come respectively from: the three
+$A_iB_i$ angles; the second derivatives of the $A_iC$ angles; the
+second derivatives of the $B_jB_k$ angles; and the mixed first
+derivatives in their products. The first term uses
+\[
+ \theta\bigl(\sqrt3\sin(t/2)\bigr)''
+ =-\frac{\ell}{16h_\ell^3}.
+\]
+Before multiplying by $q$, the sum of the $A_iC$ angle second
+derivatives is
+\[
+ \frac{4\kappa^2}{3}\left(3a+\frac\beta2\right)
+ +3ac\ddot C_z.
+\]
+The sum of the $B_jB_k$ angle second derivatives simplifies to
+$G_0/(\sqrt3q h_g)$, and the mixed contribution is
+$2aKb/(q h_g)$. These yield \eqref{star:scaledformula}.
+
+All quantities in \eqref{star:scaledformula} have continuous extensions
+to $0\leq s\leq1$. In particular
+\[
+ q=\frac{s}{\sqrt3},\quad p=\frac{s+1/2}{\sqrt3},\quad
+ b=\sqrt{\frac{(1-s)(s+2)}3},\quad \ell=\sqrt{1-s}.
+\]
+The factor $A(s)=\sqrt3\,[2\arcsin(s/2)/s]$ is increasing, since
+\[
+ \frac{2\arcsin(s/2)}s
+ =\int_0^1(1-s^2u^2/4)^{-1/2}\,du.
+\]
+The interval implementation encloses this factor using its endpoints,
+including its value one at zero before multiplication by $\sqrt3$.
+It similarly uses monotonicity of $b$ and $\ell$ to avoid interval
+square roots crossing below zero at the endpoints.
+
+The implementation subdivides $[0,1]$ into 214 dyadic intervals, with
+maximum denominator $2^{13}$. On every interval Arb ball arithmetic
+proves that the right side of \eqref{star:scaledformula} is greater than
+the exact rational $1/100$. The smallest box lower bound exceeds
+$0.0103792287$. Exact rational endpoint comparisons verify that the
+saved intervals form a partition without gaps. The partition was
+generated at 128 bits and replayed at 256 bits. This proves the
+second-derivative inequality; Taylor expansion along the feasible
+curve \eqref{star:antimotion} proves the local-maximizer exclusion.
+
+The scalar formula was additionally compared at 31 interior points
+with the independently implemented geometric second jets in the
+earlier NonWheel script, with discrepancy below $2\times10^{-15}$.
+That floating comparison checks implementation consistency; the
+continuum sign comes from the interval calculation.
+
+\section{General stars, circumradius, and what is still open}
+The local response formulas were evaluated on all saved feasible
+critical arrays with an eligible star. There are eleven saved
+star instances, including a duplicated critical orbit, with root
+degree three or four. Each has a positive eigenvalue of
+$H_{\rm star}$ numerically. Several have negative trace. For example,
+the asymmetric seven-point array \texttt{n7moduli\_asym\_1.npy} gives
+\[
+ \operatorname{spec}(H_{\rm star})\simeq
+ (-82.01219,\ -1.397868,\ 0.732911).
+\]
+Thus even this local case requires a directional argument, not positivity
+of the trace in central-vertex coordinates. These eleven tests are
+floating evidence, not a proof for arbitrary stars or asymmetric
+seven-point configurations.
+
+The radius can be included in exactly these same three variables.
+For balanced enclosing-sphere contact weights $\lambda$, set
+\[
+ V_\lambda(Y)=\sum_i\lambda_i|y_i|^2-
+                   \left|\sum_i\lambda_i y_i\right|^2\leq R(Y)^2.
+\]
+At the initial configuration equality holds. The star-coordinate
+radius lower-bound gradient is $T^T\nabla V_\lambda$.
+At a star-stationary point with a positive eigenvalue of
+$H_{\rm star}$, if this gradient is nonzero, the joint-ascent lemma
+in Proposition~\ref{product:joint} supplies a star motion that
+increases both $P$ and $R$. One mixes a positive product direction
+with a small component of this variance gradient. If all such
+gradients vanish, a second-order variance test is needed.
+
+Theorem~\ref{star:main} excludes the entire interior symmetric seven-point
+family from local product maximizers. It does not imply that a
+maximizer must be symmetric, that every asymmetric star is a saddle,
+or that following these motions must end at a regular tetrahedron.
+The focused next theorem is the same positive-direction statement
+for arbitrary feasible $x$ in the three-variable family
+\eqref{star:starhessian}, first with three circle neighbors and then with
+larger triangular neighborhoods. Boundary and collision limits still
+require the intrinsic-objective bookkeeping described in the previous
+fixed-graph note.
+
+
+\section{Why five circle angles cannot be varied independently}
+In the local circle-star model, the neighbors $y_i$ of a moving vertex $x$
+lie on fixed circles $y_i(t_i)$, determined by their other two fixed
+diameter neighbors. Put
+\[
+ d_i=y_i-x,\qquad v_i=\partial_{t_i}y_i,\qquad
+ a_i=d_i\cdot v_i\ne0.
+\]
+Differentiating $|y_i-x|^2=1$ gives
+\begin{equation}\label{many:compatibility}
+ a_i\dot t_i=d_i\cdot\dot x.
+\end{equation}
+If the $d_i$ span $\R^3$, the admissible angular velocities form a
+three-dimensional subspace of $\R^k$. There are $k-3$ linear
+compatibility conditions. For $k=5$, two such conditions are already
+present. A motion of just two angles, used in the seven-point example,
+cannot simply be copied to a larger star.
+
+There is no obstruction to moving $x$ itself locally: if every
+$a_i\ne0$, each circle intersection defines $t_i=t_i(x)$ by the
+implicit function theorem. Its second derivative is determined by
+\begin{equation}\label{many:secondcompatibility}
+ a_i\ddot t_i=d_i\cdot\ddot x
+ -d_i\cdot\partial_{t_i}^2y_i\,\dot t_i^2
+ -|v_i\dot t_i-\dot x|^2.
+\end{equation}
+These equations, or the equivalent $3\times3$ response formulas in
+the preceding circle-star analysis, are valid for any number of neighbors.
+The task is to choose a compatible motion with favorable product
+curvature. The following family supplies such a choice uniformly
+for $k=5,7,9,\ldots$.
+
+\section{An extremal family with arbitrarily many circle neighbors}
+Let $k=2m+1\geq5$, and use indices modulo $k$. Define
+\[
+ \delta=\frac{\pi}{2k},\quad \rho=\cos\delta,\quad
+ r=\frac1{2\rho},\quad c=\cos(2\delta),\quad
+ e_i=(\cos(2\pi i/k),\sin(2\pi i/k)).
+\]
+The fixed vertices are $A_i=(re_i,0)$, a regular odd polygon of
+diameter one. For $0<q<r$ put
+\begin{gather*}
+ s=q/r,\qquad b=r\sqrt{(1-s)(s+1+2c)},\qquad
+ h=\sqrt{1-q^2},\qquad z=b-h,\\
+ B_i=(qe_i,b),\qquad C=(0,0,z).
+\end{gather*}
+The central moving vertex is $C$; its $k$ diameter neighbors are $B_i$.
+Each $B_i$ has exactly two other diameter neighbors,
+$A_{i+m}$ and $A_{i+m+1}$, both fixed.
+
+Indeed, the diameter edges are precisely
+\begin{equation}\label{many:diameterlist}
+ A_iA_{i+m},\qquad B_iA_{i+m},\qquad
+ B_iA_{i+m+1},\qquad CB_i\qquad(0\leq i<k).
+\end{equation}
+There are $4k=2(2k+1)-2$ distinct edges. The two fixed centers for
+$B_i$ have midpoint $(-rc\,e_i,0)$ and unit-sphere intersection
+circle of radius $\rho$ in the plane spanned by $e_i$ and the
+vertical direction. A convenient circle parametrization is
+\begin{equation}\label{many:circles}
+ B_i(t_i)=((-rc+\rho\cos t_i)e_i,\rho\sin t_i).
+\end{equation}
+At the symmetric configuration all $t_i=t$, with
+$p:=q+rc=\rho\cos t$ and $b=\rho\sin t$.
+
+\begin{proposition}
+For $0<s<1$, these $2k+1$ points are distinct, have diameter one,
+and have exactly the diameter graph \eqref{many:diameterlist}. The local
+fixed-circle motions are transverse.
+\end{proposition}
+\begin{proof}
+The longest chords of the fixed odd polygon are $A_iA_{i+m}$, of
+length $2r\cos\delta=1$. For each $B_i$, the two furthest fixed
+vertices are $A_{i+m},A_{i+m+1}$, and their squared distances are
+$q^2+r^2+2rcq+b^2=1$. All other cross distances are smaller.
+The longest $B$-polygon chords have length $q/r=s<1$.
+Finally $|C-B_i|^2=q^2+h^2=1$.
+
+Since $h^2-b^2=r^2+2rcq>0$, we have $z<0$. Put
+$J=hp-qb$. Because $p>q$ and $h>b$, $J>0$.
+Differentiation gives $dz/dq=-p/b+q/h<0$.
+At the upper endpoint $q=r$, $z=-\sqrt{1-r^2}$; hence
+$|C-A_i|^2=r^2+z^2<1$ in the open interval.
+All remaining distances have now been considered. Distinctness
+follows from $q,r,b>0$ and $z<0$.
+The factor $J=(B_i-C)\cdot\partial_{t_i}B_i$ is the nonzero
+transversality factor for every circle.
+\end{proof}
+
+\paragraph{Exposed dual pairs.}
+The face opposite $B_i$ has exactly the three vertices
+$C,A_{i+m},A_{i+m+1}$. It is a triangular face of the critical
+extremal ball polyhedron. Its three edges, for all $i$, give the
+spokes $CA_i$ and the fixed polygon edges $A_iA_{i+1}$.
+Edge duality then gives the pairs
+\begin{equation}\label{many:dualpairs}
+ (A_iA_{i+1},\ A_{i+m+1}B_{i+m+1}),\qquad
+ (CA_i,\ B_{i+m}B_{i+m+1}).
+\end{equation}
+The resulting $4k$ distinct exposed edges exhaust the Euler count
+$2(2k+1)-2$. This verifies exposure using the triangular faces and
+duality; four cross diameters alone would not suffice.
+
+Write $\Th(a)=2\arcsin(a/2)$. The fixed edge $A_iA_{i+1}$ has
+length $2\sin\delta$, hence spherical length $\beta=2\delta=\pi/k$.
+Thus throughout a sufficiently small star motion the objective is
+\begin{equation}\label{many:objective}
+ P=\beta\sum_i\Th(|A_i-B_i|)
+   +\sum_i\Th(|C-A_i|)\Th(|B_{i+m}-B_{i+m+1}|).
+\end{equation}
+At the symmetric starting point, put
+\[
+ \ell=\sqrt{1-s},\qquad d=\sqrt{r^2+z^2},\qquad
+ g=2s\sin\delta.
+\]
+Then $P=k[\beta\Th(\ell)+\Th(d)\Th(g)]$.
+The perturbations below use the full expression \eqref{many:objective},
+not just this one-variable restriction.
+
+\section{A compatible motion of all the circle neighbors}
+Let $\phi_i=2\pi i/k$ and define
+\[
+ L=qp+hb,\qquad \eta=q/J,\qquad
+ E=(\rho^2-L)\eta^2+2b\eta,\qquad
+ \zeta=\frac{1+E/2}{h}.
+\]
+Move the central vertex on the explicit curve
+\begin{equation}\label{many:centralcurve}
+ C(\varepsilon)=(\varepsilon,0,z+\zeta\varepsilon^2/2),
+\end{equation}
+and let each $B_i$ follow the nearby branch of its fixed circle
+satisfying $|B_i-C(\varepsilon)|=1$.
+Transversality supplies these smooth branches. Strict non-diameter
+inequalities persist for sufficiently small $\varepsilon$.
+
+Equations \eqref{many:compatibility}--\eqref{many:secondcompatibility} give
+\begin{equation}\label{many:angularjets}
+ \dot t_i=\eta\cos\phi_i,\qquad
+ \ddot t_i=\frac{E}{J}\left(\frac12-\cos^2\phi_i\right).
+\end{equation}
+In particular
+\[
+ \sum_i\ddot t_i=0,\qquad
+ \sum_i\dot t_i^2=\frac{k\eta^2}{2}.
+\]
+The first angular velocities form a cosine mode around the polygon;
+the second angular derivatives are forced by compatibility. The
+vertical acceleration in \eqref{many:centralcurve} is chosen to make
+their mean zero. Thus all required neighbors respond to a single
+central-vertex motion, rather than being moved independently.
+
+\begin{theorem}[Uniform computer-assisted sign certificate]\label{many:theorem}
+For every odd $k\geq5$ and every $0<s<1$, the feasible curve
+\eqref{many:centralcurve} satisfies
+\[
+ \boxed{P'(0)=0,\qquad P''(0)>\frac{\pi q}{20}>0.}
+\]
+Consequently no interior configuration of this symmetric family is
+a local maximum of the spherical dual-edge product on its diameter
+stratum. No stationarity assumption along the symmetric family is
+required.
+\end{theorem}
+
+The horizontal first derivative vanishes by cyclic symmetry.
+The rest of the proof consists of the explicit second derivative
+and the uniform interval inequality below. The theorem includes
+$k=5$ with eleven points, $k=7$ with fifteen, and arbitrarily large
+odd numbers of opposite circle neighbors. Full rotational symmetry
+is imposed only on the starting configuration.
+
+\section{The scalar inequality covering every odd neighbor count}
+Introduce
+\begin{gather*}
+ w=\sin^2\delta,\quad c_4=\cos(4\delta),\quad
+ h_\ell=\sqrt{1-\ell^2/4},\quad h_g=\sqrt{1-g^2/4},\\
+ A=\frac1{d\sqrt{1-d^2/4}},\qquad
+ B=A\left(-\frac1{d^2}+\frac1{4(1-d^2/4)}\right),\qquad
+ v=2\sin(2\delta),\\
+ G_0=\frac{b^2(1+c_4)}2+p^2-qp
+             +\frac{q^2b^2(1-c_4^2)}{4h_g^2}.
+\end{gather*}
+For $f(t)=\Th(2\rho\sin(t/2))$,
+\[
+ f''(t)=-\frac{w\ell}{4h_\ell^3}.
+\]
+The second derivative along \eqref{many:centralcurve} is exactly
+\begin{align}
+ \frac{P''(0)}k={}&
+ \frac{\beta f''(t)\eta^2}{2}
+ +\Th(g)\left(A+\frac{Br^2}{2}+Az\zeta\right) \notag\\
+ &+\Th(d)\frac{vq}{2h_gJ^2}G_0
+ -\frac{Arbqc\,v}{Jh_g}.\label{many:secondformula}
+\end{align}
+
+Here is a derivation of the terms that could otherwise obscure the
+sign. From \eqref{many:angularjets}, the mean angular acceleration is
+zero, so the fixed-edge contribution is $\beta f''\eta^2/2$ per
+vertex. The angle Hessian for a vector of length $d$ is
+$AI+Bzz^T$, which gives the second term, including the central
+vertical acceleration. For neighboring $B$-vertices, put
+$U=-b\eta$, $V=p\eta$; these are their radial and vertical
+velocity coefficients. Cyclic trigonometric sums give
+\begin{align*}
+ \frac1k\sum_i\bigl(|\dot B_i-\dot B_{i+1}|^2
+ +(B_i-B_{i+1})\cdot(\ddot B_i-\ddot B_{i+1})\bigr)
+ &=(1-c_4)\bigl[U^2(1+c_4)+V^2-qp\eta^2\bigr],\\
+ \frac1k\sum_i\bigl((B_i-B_{i+1})\cdot
+                       (\dot B_i-\dot B_{i+1})\bigr)^2
+ &=q^2U^2(1-c_4)^2(1+c_4).
+\end{align*}
+Applying the angle Hessian to these two identities simplifies to
+$vqG_0/(2h_gJ^2)$. Finally,
+$e_{i+m}+e_{i+m+1}=-2c\,e_i$ gives the mixed first-derivative
+term $-Arbqc\,v/(Jh_g)$ in \eqref{many:secondformula}.
+
+To remove singular endpoint quotients, define
+\[
+ F(y)=\frac{\arcsin\sqrt y}{\sqrt y},\qquad F(0)=1,
+ \quad V_0=\frac{4\sqrt{1-w}}{F(w)},\quad
+ T_0=\frac2r\frac{F(s^2w)}{F(w)}.
+\]
+These are $V_0=v/\delta$ and $T_0=\Th(g)/(q\delta)$, with
+continuous endpoint extensions. Dividing \eqref{many:secondformula}
+by $q\delta$ gives
+\begin{equation}\label{many:psi}
+ \begin{split}
+ \Psi:=\frac{P''(0)}{kq\delta}
+ ={}&\frac{f''(t)q}{J^2}
+ +T_0\left(A+\frac{Br^2}{2}+Az\zeta\right)\\
+ &+\frac{\Th(d)V_0G_0}{2h_gJ^2}
+ -\frac{ArbcV_0}{Jh_g}.
+ \end{split}
+\end{equation}
+All quantities in this expression can be evaluated without $k$:
+\begin{gather*}
+ \rho=\sqrt{1-w},\quad r=1/(2\rho),\quad
+ c=1-2w,\quad c_4=1-8w+8w^2,\\
+ q=rs,\quad p=q+rc,\quad
+ b=r\sqrt{(1-s)(s+1+2c)},\quad
+ h_\ell=\sqrt{(3+s)/4},\quad h_g=\sqrt{1-s^2w}.
+\end{gather*}
+For every $k\geq5$,
+\[
+ 0<w\leq\sin^2(\pi/10)=\frac{3-\sqrt5}{8}<\frac1{10}.
+\]
+We prove the stronger scalar statement
+\begin{equation}\label{many:certstatement}
+ \Psi(s,w)>\frac1{10}qquad
+ (0\leq s\leq1,\ 0\leq w\leq1/10),
+\end{equation}
+using continuous endpoint extensions. Since $k\delta=\pi/2$,
+\eqref{many:certstatement} proves the second derivative in
+Theorem~\ref{many:theorem}.
+
+\section{Interval certificate and independent geometric checks}
+The certificate uses coordinates $u=\sqrt{1-s}$ and $v_*=10w$ on
+the unit square. In these coordinates $\ell=u$ and
+$b=ru\sqrt{s+1+2c}$, avoiding square-root endpoint loss.
+The only removable trigonometric quotient is handled by
+\[
+ F(y)=\sum_{j=0}^{9}
+ \frac{\binom{2j}{j}}{4^j(2j+1)}y^j+\mathcal R(y),
+ \qquad 0\leq\mathcal R(y)\leq\frac1{9\cdot10^9}
+ \quad(0\leq y\leq1/10).
+\]
+This tail bound follows by bounding each remaining coefficient by
+one and summing the geometric tail. All polynomial coefficients
+and the tail bound are exact rationals. The implementation encloses
+the tail by a symmetric ball of this radius, which is conservative.
+
+Arb ball arithmetic verifies \eqref{many:certstatement} on 13,456 dyadic
+squares, with maximum depth seven. Their smallest lower bound is
+greater than $0.10005404$. Exact tree and rational-area checks
+verify that the saved squares partition the entire unit square.
+The certificate was generated at 128 bits, saved, read back, and
+replayed at 256 bits. It covers a continuous interval of $w$ down
+to zero, so it covers all odd $k\geq5$ at once, without a cutoff
+on the number of neighbors.
+
+The full geometric gradient/Hessian implementation was also checked
+against \eqref{many:psi} for $k=5,7,9,11$ and $s=0.1,0.5,0.9$.
+The largest discrepancy in scaled curvature was below
+$4.1\times10^{-13}$, within the series-tail enclosure and floating
+roundoff. For all twelve configurations, actual circle intersections
+were computed at $\varepsilon=\pm10^{-3}$ on
+\eqref{many:centralcurve}. All 24 resulting configurations preserve the
+diameter equations numerically and have increased product.
+These finite checks support the implementation; the continuum sign
+proof is the interval certificate, not the sampled configurations.
+
+\section{Scope and the remaining general problem}
+The circular motion is now treated with five, seven, nine, and
+arbitrarily many odd opposite vertices. The additional neighbors
+are compatible because their motions are generated by $C$, rather
+than prescribed separately. The mean-zero angular-acceleration
+choice produces a sign that can be certified uniformly.
+
+The odd restriction comes from the extremal diameter-graph
+construction: a regular even polygon has a different number and
+pattern of diameter edges. The algebraic parameter interval alone
+does not provide an even-neighbor extremal configuration. No claim
+about even $k$ is inferred from it.
+
+For a general asymmetric neighborhood with $k\geq5$, equations
+\eqref{many:compatibility} and \eqref{many:secondcompatibility} remain exact,
+as does the $3\times3$ Hessian reduction proved above.
+The cyclic cancellations used in \eqref{many:secondformula} require the
+regular starting geometry. Proving an analogous positive direction
+without those cancellations remains open.
+
+The theorem also does not assert that its particular motion raises
+the circumradius. At a product-stationary point, the positive
+direction can be combined with a nonzero contact-variance gradient
+using the joint-ascent lemma in Proposition~\ref{product:joint}.
+That requires a separate radius hypothesis. Neither a global
+radius-maximizing product optimizer nor convergence to a tetrahedron
+is established here.
+
+
+\part{The weak-flow obstruction and the remaining research target}
+
+\section{Which evolution is actually proved?}
+Put $p=1/2+g$, with $g$ odd, and work modulo linear functions
+$\Pp=\{u\mapsto a\cdot u\}$. Let $\C$ be the convex set of width-one support perturbations, modulo translations, and set
+\[
+ q(g)=\inf_a\|g+a\cdot u\|_\infty=R(K)-\tfrac12,
+ \qquad Q(g)=\int_{\Sph}\left(\tfrac12|\nabla g|^2-g^2\right)\dd\sigma.
+\]
+Write $E=Q+I_{\C}$, where $I_{\C}$ is zero on $\C$ and infinite elsewhere. For admissible $g$,
+\begin{equation}\label{flow:volume}
+ E(g)=\pi/3-2V(K),\qquad 0\leq q(g)\leq q_J:=\RJ-\tfrac12,
+ \qquad \RJ=\sqrt{3/8}.
+\end{equation}
+The quadratic form $Q$ is strictly positive on nonzero odd classes modulo $\Pp$: after removing degree one, the first spherical harmonic degree is three. It follows that $E$ is strictly convex on $\C$.
+
+Let $J=\partial(q^2/2)$, and let $q_*$ be the dual norm on measures annihilating $\Pp$. Norming pairs satisfy
+\begin{equation}\label{flow:normpair}
+ \xi\in J(g)\quad\Longleftrightarrow\quad
+ q(g)^2=\langle\xi,g\rangle=q_*(\xi)^2.
+\end{equation}
+Hynd's formal classical system is
+\begin{equation}\label{flow:classical}
+ \xi\in J(g),\qquad -\dot\xi\in\partial E(g),
+\end{equation}
+equivalently $\partial E^*(\dot\xi)+J^*(\xi)\ni0$. The proved result is a weak solution with finite $E^*$ variation, together with essential monotonicity of $E$ and $q$ \cite[Definition 4.1, Theorem 4.3, Corollary 4.5]{HyndFlow}. In particular, at good times $s<t$,
+\begin{equation}\label{flow:weak}
+ \frac{q(s)^2-q(t)^2}{2}
+ =\mathop{\rm Var}_{E^*}(\xi;[s,t])+\int_s^t E(g(r))\dd r.
+\end{equation}
+The variation is the supremum of partition sums
+$\sum_i h_i E^*((\xi(t_i)-\xi(t_{i-1}))/h_i)$.
+The theorem imposes the initial condition on $\xi|_{\C}$, not a Hausdorff-continuous body trace $K_t\to K_0$. This distinction will be decisive.
+
+The preprint and published paper were both checked. Neither supplies a backward-existence theorem or an invertible semigroup of bodies. We use the published equation numbering. The new propositions below are deductions made in this investigation, not assertions attributed to Hynd.
+
+\section{A sharper dissipation bound and finite backward lifetime}
+\begin{proposition}\label{flow:dissipation}
+For a weak solution satisfying \eqref{flow:weak} and Hynd's essential energy monotonicity,
+\begin{equation}\label{flow:strongweak}
+ q(s)^2-q(t)^2\geq4\int_s^t E(g(r))\dd r
+ \geq4(t-s)E(g(t))
+\end{equation}
+for good endpoints (or the corresponding one-sided monotone representatives).
+\end{proposition}
+\begin{proof}
+The weaker factor two follows immediately from $E^*\geq0$. To recover the factor four, fix $0<\lambda<1$. Since $-\lambda g(s)\in\C$ and $E(-\lambda g(s))=\lambda^2E(g(s))$, the single-chord lower bound for the variation and Fenchel's inequality give, with $h=t-s$,
+\[
+ \mathop{\rm Var}_{E^*}(\xi;[s,t])
+ \geq\lambda\langle\xi(s)-\xi(t),g(s)\rangle-h\lambda^2E(g(s))
+ \geq\lambda q(s)(q(s)-q(t))-h\lambda^2E(g(s)).
+\]
+Set $f=q^2/2$. At almost every $s$, the monotone function $f$ is differentiable and $E(g(s))$ is a Lebesgue value. Divide \eqref{flow:weak} and this bound by $h$ and let $t\downarrow s$ through valid endpoints. With $r=-f'(s)$ this gives
+\[
+ r\geq\lambda r+(1-\lambda^2)E(g(s)),\qquad
+ r\geq(1+\lambda)E(g(s)).
+\]
+Let $\lambda\uparrow1$. The singular part of the decreasing measure $-\dd f$ is nonnegative, so integration yields
+$f(s)-f(t)\geq2\int_s^t E$. The second inequality uses monotonicity of $E$.
+\end{proof}
+For classical solutions the same estimate follows from
+$\langle\zeta,g\rangle\geq2E(g)$ for $\zeta\in\partial E(g)$, by testing the subgradient inequality at $(1-\varepsilon)g$.
+
+\begin{corollary}\label{flow:backtime}
+Suppose a backward extension reaches a current nonball state with radius $R_0$ and energy $E_0>0$, with the corresponding essential traces. Its elapsed backward duration $T$ satisfies
+\begin{equation}\label{flow:timebound}
+ T\leq\frac{q_J^2-(R_0-1/2)^2}{4E_0}.
+\end{equation}
+There is no positive-length incoming extension ending at $R_0=\RJ$. No nonball trajectory with these monotonicities can exist for all negative times.
+\end{corollary}
+Indeed earlier energy is at least $E_0$, and earlier radius is at most $\RJ$. These facts combined with \eqref{flow:strongweak} prove the assertions. A nonball forward trajectory also cannot remain on a constant-radius plateau of positive duration while its energy remains positive.
+
+For a competitor with $V_0\leq\VM$, put
+\[
+ \EM=\pi/3-2\VM=0.20747745926643729946\ldots.
+\]
+Then $E_0\geq\EM$. Our certified exclusion $R_0>0.60246$ implies
+\[
+ T<0.002565956696855934.
+\]
+More locally, with $\varepsilon=\RJ-R_0$,
+\begin{equation}\label{flow:asymptotic}
+ T\leq\frac{2q_J\varepsilon-\varepsilon^2}{4\EM}
+ =0.2708063711911198\ldots\,\varepsilon-\frac{\varepsilon^2}{4\EM}.
+\end{equation}
+These are times in the normalization \eqref{flow:classical}; rescaling the evolution rescales them. They are upper bounds on any existing continuation, not assurances of existence or of reaching the endpoint.
+
+\begin{center}
+\begin{tabular}{rr}\toprule
+Current $R_0$ & upper bound in \eqref{flow:timebound}, using $E_0\geq\EM$\\\midrule
+$0.60246$ & $0.002565956697$\\
+$0.61000$ & $0.000635688699$\\
+$0.61200$ & $0.000100690823$\\
+$0.61237$ & $0.000000659595$\\\bottomrule
+\end{tabular}
+\end{center}
+Displayed table entries are rounded upward. The machine-readable output contains Arb enclosures at 128 and 256 bits.
+
+\section{The initial state forgets the free tetrahedral cells}
+Fix a regular unit tetrahedron $T=\{x_1,\ldots,x_4\}$ centered at the origin, with $x_i=\RJ u_i$. Thus $\sum_i u_i=0$ and $u_i\cdot u_j=-1/3$ for $i\ne j$.
+Every width-one completion $K\supset T$ has circumcenter zero and radius $\RJ$, so
+\[
+ g(u_i)=q_J,\qquad g(-u_i)=-q_J.
+\]
+Define the odd norming measure
+\begin{equation}\label{flow:tetmeasure}
+ \xi_T=\frac{q_J}{8}\sum_{i=1}^4(\delta_{u_i}-\delta_{-u_i}).
+\end{equation}
+Its total variation is $q_J$, it annihilates linear functions, and
+$\langle\xi_T,g\rangle=q_J^2$. Consequently \emph{the same} $\xi_T$ belongs to $J(g)$ for every completion.
+
+\begin{proposition}\label{flow:face}
+The contact class
+\[
+ F_T=\{g\in\C:\xi_T\in J(g)\}
+\]
+is exactly the class of width-one completions of $T$, modulo translations. It has a unique minimizer $\bar g_T$ of $E$, corresponding to its unique largest-volume body $\bar K_T$.
+\end{proposition}
+\begin{proof}
+If $g\in F_T$, then $q(g)=q_J$. Choose the circumcenter as origin, so $|g|\leq q_J$. Equality in the pairing forces $g(u_i)=q_J$, and therefore $p(u_i)=\RJ$. Since $K\subset B_{\RJ}(0)$, its support point in direction $u_i$ must be $x_i$. Thus $K\supset T$. The converse was just proved. The set of completions is compact and convex under Minkowski combinations, and volume, hence $E$, is continuous. Strict convexity of $E$ modulo translations proves uniqueness of its minimizer.
+\end{proof}
+There is also uniqueness of the dual state \emph{on odd functions}. To see this, first note that $K\cap\partial B_{\RJ}=T$. For $z$ in this intersection, write
+$\alpha_i=2z\cdot x_i+1/4$. The inequalities $|z-x_i|\leq1$ imply $\alpha_i\geq0$, while
+$\sum\alpha_i=1$ and $\sum\alpha_i^2=1$. Hence precisely one $\alpha_i=1$ and $z$ is a vertex. Norming measures are therefore supported on $\{\pm u_i\}$. Their combined positive/negative masses $w_i$ satisfy $\sum w_i=q_J$ and $\sum w_i u_i=0$, forcing $w_i=q_J/4$. Their odd parts are \eqref{flow:tetmeasure}; any remaining even part annihilates $\C$. Thus choosing a different norming representative does not encode the free-cell data.
+
+\section{What the implicit scheme selects}
+Hynd's scheme satisfies
+\[
+ \xi^k\in J(g^k),\qquad
+ (\xi^{k-1}-\xi^k)/\tau\in\partial E(g^k).
+\]
+Adding these subgradient inequalities shows that its body step is the unique minimizer
+\begin{equation}\label{flow:primalstep}
+ g^k=\mathop{\rm argmin}_{g\in\C}
+ \left\{\tau E(g)+\tfrac12q(g)^2-\langle\xi^{k-1},g\rangle\right\}.
+\end{equation}
+Uniqueness follows from strict convexity of $E$. This is a deduction directly from the published implicit inclusion; it requires no identification of the flow with a different geometric deformation.
+
+\begin{theorem}[First-step selection and volume increase]\label{flow:selection}
+Start \eqref{flow:primalstep} from $\xi^0=\xi_T$, regardless of which completion was named as the initial body. As $\tau\downarrow0$,
+\[
+ g^1_\tau\longrightarrow\bar g_T
+\]
+in the Hausdorff topology modulo translations. Moreover
+\begin{equation}\label{flow:allsteps}
+ E(g^k_\tau)\leq E(\bar g_T),\qquad
+ V(K^k_\tau)\geq V(\bar K_T)\quad(k\geq1).
+\end{equation}
+The same volume lower bound holds almost everywhere for limits constructed by this scheme.
+\end{theorem}
+\begin{proof}
+Write $F_0(g)=q(g)^2/2-\langle\xi_T,g\rangle$. Duality gives
+\[
+ F_0(g)\geq\tfrac12(q(g)-q_J)^2-\tfrac12q_J^2,
+\]
+with minimum $-q_J^2/2$ attained precisely on $F_T$. Compare the first-step minimizer with $\bar g_T$:
+\[
+ 0\leq F_0(g^1_\tau)+q_J^2/2
+ \leq\tau\big(E(\bar g_T)-E(g^1_\tau)\big).
+\]
+Thus $E(g^1_\tau)\leq E(\bar g_T)$, and every compactness limit belongs to $F_T$ and minimizes $E$ there. Uniqueness proves convergence. Subsequent discrete energy monotonicity gives \eqref{flow:allsteps}. In the passage to a weak solution the constraint $E(g)\leq E(\bar g_T)$ persists: this is a closed convex sublevel set, hence also a weakly closed constraint in Hynd's Hilbert path space.
+\end{proof}
+The first-step limit is not automatically the full right trace of the weak path: that additional continuity is not asserted here. The bound for every positive step and almost every positive limiting time is sufficient for the following obstruction.
+
+Take two distinct Meissner completions $M_1,M_2$ of the same $T$, with support perturbations $g_1,g_2$. Their Minkowski midpoint is another completion and satisfies the exact identity
+\begin{equation}\label{flow:midpoint}
+ V\left(\tfrac12M_1+\tfrac12M_2\right)
+ =\VM+\tfrac18 Q(g_1-g_2)>\VM.
+\end{equation}
+Therefore $V(\bar K_T)>\VM$. Every scheme-produced forward solution initialized at any completion of $T$ satisfies
+\[
+ V(K_t)\geq V(\bar K_T)>\VM\qquad\text{for almost every }t>0.
+\]
+In particular, it cannot have a Hausdorff-continuous initial trace equal to a Meissner body, even though its assigned dual initial condition is valid. This is not a contradiction to the weak theorem: that theorem prescribes the dual state rather than the full body trace.
+
+\subsection{The obstruction already occurs strictly below Jung}
+For $0<\lambda<1$, define
+\[
+ M_{i,\lambda}=\lambda M_i+(1-\lambda)B_{1/2},\qquad
+ g_{i,\lambda}=\lambda g_i.
+\]
+Both have $R_\lambda=1/2+\lambda q_J$ and the common norming state
+$\xi_\lambda=\lambda\xi_T$. Hence their first implicit body step is identical for every $\tau>0$. Compare that step with the scaled midpoint, which belongs to the same norming class. The proof above gives, at every subsequent discrete step and almost every positive time in scheme limits,
+\begin{equation}\label{flow:scaledjump}
+ V(K_t)\geq V(M_{i,\lambda})+\frac{\lambda^2}{8}Q(g_1-g_2).
+\end{equation}
+This is an explicit failure to retain initial body data at radii arbitrarily close to $\RJ$. It does not assert that the Minkowski rays themselves solve Hynd's equation. Nor are these ball mixtures competitive bodies: their volumes exceed $\VM$. Their role is to disprove a general claim that proximity to Jung makes the scheme invertible on bodies.
+
+\section{Contact-class selection along any weak solution}
+The selection mechanism has a direct counterpart in the weak definition, not just in the implicit scheme.
+\begin{proposition}\label{flow:aselection}
+At almost every time $s$ of a weak solution with essential energy monotonicity, $g(s)$ is the unique minimizer of $E$ among
+\[
+ F_{\xi(s)}=\{h\in\C:\xi(s)\in J(h)\}.
+\]
+\end{proposition}
+\begin{proof}
+For $h\in F_{\xi(s)}$, Fenchel's inequality with $-h$, the norming identities, and \eqref{flow:weak} imply
+\begin{align*}
+ \tfrac12(q(s)^2-q(t)^2)
+ &\geq\langle\xi(s)-\xi(t),h\rangle-(t-s)E(h)+\int_s^t E(g(r))\dd r\\
+ &\geq q(s)(q(s)-q(t))-(t-s)E(h)+\int_s^t E(g(r))\dd r.
+\end{align*}
+Consequently
+\begin{equation}\label{flow:faceaverage}
+ \frac1{t-s}\int_s^t E(g(r))\dd r
+ \leq E(h)-\frac{(q(s)-q(t))^2}{2(t-s)}\leq E(h).
+\end{equation}
+At almost every $s$ the left side tends to $E(g(s))$ as $t\downarrow s$ through good endpoints. This inequality holds simultaneously for every $h$ in the norming class. Since $g(s)$ itself belongs to that class, it minimizes $E$ there. Strict convexity gives uniqueness.
+\end{proof}
+Thus almost every body along the evolution already satisfies a maximum-volume selection within its dual contact class. An arbitrary prescribed body need not be in this selected class.
+
+\section{Endpoint obstructions for weak backward continuations}
+The selection obstruction is not merely a finite-step observation. Suppose a weak solution has an initial essential dual trace $\xi_0$, with $q(t)\to q_*(\xi_0)$, and with pairings against elements of $\C$ converging. For any $h\in\C$ with $\xi_0\in J(h)$, \eqref{flow:weak} and the single-chord Fenchel inequality, first on $[s,t]$ and then as $s\downarrow0$, imply
+\[
+ \tfrac12(q_0^2-q(t)^2)
+ \geq\langle\xi_0-\xi(t),h\rangle-tE(h)+\int_0^t E(g(r))\dd r.
+\]
+Since the pairing is at least $q_0(q_0-q(t))$, we obtain
+\begin{equation}\label{flow:traceconstraint}
+ E(g(t))\leq E(h)-\frac{(q_0-q(t))^2}{2t}.
+\end{equation}
+This derivation uses only the stated trace assumptions, energy balance and essential monotonicity.
+
+If the bodies themselves converge in Hausdorff distance to a completion $K_0\supset T$, those trace assumptions follow. Indeed norming measures are bounded; every weak-star subsequential limit norms $g_0$, and its restriction to odd functions is uniquely $\xi_T$ by the contact argument above. Apply \eqref{flow:traceconstraint} with $h=\bar g_T$ and use volume continuity at zero. It follows that $E(g_0)\leq E(\bar g_T)$, and hence $K_0=\bar K_T$ modulo translations.
+
+Consequently, among the completions of a fixed tetrahedron, \emph{only its largest-volume completion can be a continuous initial body trace of such a weak evolution}. This statement does not supply a trace for the constructed solutions; it restricts any trace that exists. In particular, a continuous reversal from a competitive state to a Jung endpoint, followed by a forward weak evolution with the same trace, is impossible: \eqref{flow:traceconstraint} would force its later volume above $\VM$.
+
+\begin{theorem}[No competitive backward approach to Jung]\label{flow:nocompetitive}
+A weak trajectory satisfying Hynd's energy monotonicity and containing a good time $t$ with $V(K_t)\leq\VM$ cannot satisfy
+\[
+ \lim_{s\downarrow a}R(K_s)=\RJ
+\]
+at the earlier end of its interval of existence. This rules out a Jung backward endpoint even without assuming that the whole body path has a Hausdorff limit.
+\end{theorem}
+\begin{proof}
+Corollary~\ref{flow:backtime} makes $a$ finite. Suppose the displayed limit holds. Along a sequence of good times $s_n\downarrow a$, compactness modulo translations gives a Hausdorff limit $K_*$. It has radius $\RJ$ and contains some centered regular tetrahedron $T_*$. Along a further subsequence the norming measures $\xi(s_n)$ converge weak-star: their total variations are $q(s_n)\leq q_J$. The limit norms the support perturbation of $K_*$, because support functions converge uniformly and
+$\langle\xi(s_n),g(s_n)\rangle=q(s_n)^2$. Its restriction to odd functions must therefore be $\xi_{T_*}$.
+
+Set $h=\bar g_{T_*}$, the maximum-volume completion. Use Fenchel's inequality with $-h$ in \eqref{flow:weak} on $[s_n,t]$, and use $E(g(r))\geq E(g(t))$ for earlier $r$. Passing to the limit gives
+\[
+ \tfrac12(q_J^2-q(t)^2)
+ \geq\langle\xi_{T_*}-\xi(t),h\rangle
+ +(t-a)(E(g(t))-E(h)).
+\]
+The pairing is at least $q_J(q_J-q(t))$. Hence
+\[
+ (t-a)(E(g(t))-E(h))\leq-\tfrac12(q_J-q(t))^2\leq0.
+\]
+But $E(g(t))\geq\EM>E(h)$ by \eqref{flow:midpoint}, a contradiction.
+\end{proof}
+The conclusion concerns the actual weak evolution and its specified monotonicities. A scheme restart allowing an instantaneous change in the body, or a different volume-decreasing deformation, is a different continuation problem. If a competitive backward trajectory exists, its radius must stop short of Jung; the theorem does not identify the obstruction or prove that any backward interval exists.
+
+\section{Connection to the square-cell work and a numerical check}
+The three free rectangle pairs at Jung equality are exactly the degrees of freedom absent from \eqref{flow:tetmeasure}. In the square-cell notation above, each is a square
+$D=[-1/\sqrt2,1/\sqrt2]^2$, with $G=\sqrt{1+x^2+y^2}$ and
+\[
+ W=\frac{I+zz^{\mathsf T}}{G^3},\qquad z=(x,y).
+\]
+For the two canonical fillings $\phi_-,\phi_+$, put $v=\phi_+-\phi_-$. Both have the same area cost. The exact quadratic cell identity gives
+\[
+ C((1-\theta)\phi_-+\theta\phi_+)
+ =C_{\rm can}+\theta(1-\theta)\mathcal D(v),\quad
+ \mathcal D(v)=\int_D\nabla v^{\mathsf T}W\nabla v\dd x\dd y>0.
+\]
+If two canonical completions differ in this single cell pair, then
+$Q(g_1-g_2)=\mathcal D(v)$. This supplies a concrete version of \eqref{flow:midpoint}.
+
+With $c=1/\sqrt2$ and $k=\sqrt3/2$, the functions used in the check are
+\[
+ \phi_-=
+ \begin{cases}c+G-k\sqrt{1+x^2},&|y|\leq\sqrt{1+x^2}/\sqrt3,\\
+ c+|y|/2,&\text{otherwise},\end{cases}
+\]
+\[
+ \phi_+=
+ \begin{cases}k\sqrt{1+y^2},&|x|\leq\sqrt{1+y^2}/\sqrt3,\\
+ G-|x|/2,&\text{otherwise}.\end{cases}
+\]
+Piecewise adaptive quadrature, split at both strip boundaries, yields
+\[
+ \mathcal D(v)\simeq0.0026985927927,\qquad
+ V\left(\tfrac12M_1+\tfrac12M_2\right)-\VM
+ \simeq0.0003373240991.
+\]
+Two tolerance levels, $10^{-9}$ and $10^{-12}$, agree within $1.2\cdot10^{-12}$ on $\mathcal D$. This is floating evidence, not an interval certificate. Strict positivity and the obstruction itself are analytic and do not depend on these decimals. The computation gives a lower bound candidate for the largest-volume completion, not its exact volume or a characterization of that completion.
+
+
+\section{What would prove radius maximization?}
+Normalize translations and consider the compact set of global volume
+minimizers. Choose one whose circumradius is largest. It would suffice
+to prove that any such body with $R<\RJ$ admits a width-one competitor
+$L$ with
+\[
+ V(L)\leq V(K),\qquad R(L)>R(K).
+\]
+Since $K$ is globally minimizing, $L$ is also minimizing, contradicting
+the choice of largest radius. Requiring this comparison for every body
+with $V\leq\VM$ is stronger than necessary.
+
+Here is a precise analytic form of the missing sign. Write the support
+function as $p=1/2+g$ and
+\[
+ \Q(g)=\int_{\mathbb S^2}\left(\tfrac12|\nabla g|^2-g^2\right)d\sigma,
+ \qquad V(K)=\pi/6-\Q(g)/2.
+\]
+If an admissible repair changes $g$ to $g+v$, then
+\[
+ V(L)-V(K)=-\Q(g,v)-\tfrac12\Q(v),
+\]
+where $\Q(g,v)$ is the polarized bilinear form. The sought sign is
+\[
+ \boxed{2\Q(g,v)+\Q(v)\geq0.}
+\]
+Hausdorff control of $v$ alone does not establish this inequality.
+Minimizer optimality provides the opposite weak inequality for every
+admissible competitor, so proving the displayed sign for a radius-raising
+repair would force equality and give the desired alternative minimizer.
+
+\subsection{Why simply expanding away from the ball stops too early}
+The tempting family is $p_t=1/2+t g$, $t>1$. Whenever it is feasible,
+\[
+ V(K_t)=\pi/6-t^2\Q(g)/2,
+ \qquad R(K_t)=1/2+t(R(K)-1/2).
+\]
+It simultaneously decreases volume and increases radius for a nonball.
+But feasibility requires
+\[
+ 0\preceq\tfrac12 I+t(\nabla^2g+gI)\preceq I
+\]
+almost everywhere. Saturated curvature constraints prevent any $t>1$;
+saturation does not imply $R=\RJ$. For example, the width-one rotated
+Reuleaux triangle has spherical boundary patches and circumradius
+$1/\sqrt3<\RJ$, yet this expansion is infeasible. Thus the ray argument
+cannot furnish a general radius-maximizing deformation.
+
+\subsection{A finite-to-continuum alternative}
+It would also suffice to transform every finite Meissner polyhedron $M$
+into an endpoint completion $L$ with $V(L)\leq V(M)$, with no restriction
+on the number of generators. Approximate a global minimizer by finite
+Meissner polyhedra, apply this comparison, align their unit tetrahedra,
+and use compactness. Volume and radius continuity give an endpoint
+global minimizer. This avoids assuming that an optimizer is finite.
+
+The structural research priority is therefore a signed radius-raising
+comparison, or a joint geometric-deficit inequality exploiting several
+contacts simultaneously. The eight-point endpoint problem does not
+address this prior reduction. Jiang supplies stronger quantitative
+geometry for building such comparisons, but not their required sign.
+The existing Hynd-flow investigation also shows why backward use of
+that particular weak flow does not supply the missing argument.
+
+
+\appendix
+\part*{Appendices: certificates and numerical evidence}
+\addcontentsline{toc}{part}{Appendices: certificates and numerical evidence}
+\section{Verification procedure and trusted components}\label{reproduction}
+The pinned Hyra directory contains the mathematical exposition and PDF, but no certificate program or formal proof at the inspected commit. Our procedure reconstructs admissible rational chains, verifies every inequality after reconstruction, and checks that the radius intervals cover the full domain. It does not rely on the success of a floating search as a proof decision. The proof has four layers:
+\begin{enumerate}
+\item Verify the opposite-point argument, contact separation, nonsmooth transport identity, tangent inequality, and cap integration, as given in Part I.
+\item Read every saved integer chain and check its domain, monotonicity, signs before squaring, transport inequalities, antipodal bounds, and cap disjointness in exact rational arithmetic.
+\item Sum rational lower bounds with directed floors, check every recorded coefficient, include the analytic initial interval, and verify gap-free radius coverage.
+\item Compare the final rational multiple of $\pi$ with the Meissner volume using rigorous Arb balls. The advertised Hyra decimal also follows from the explicit rational lower bound for $\pi$ in the code.
+\end{enumerate}
+The historical full replay of 18 Hyra and 63 extension rows is recorded in \path{results/verification_summary.json}; it completed in 52.851 seconds in the recorded environment. The later ten rows were individually replayed, with 128- and 256-bit scalar checks, in \path{results/radius_localization_checks.json}. During consolidation we check all artifact hashes and metadata, run representative exact replays, and compile this standalone document. These checks do not relabel the historical full replay as newly performed.
+
+The adversarial checks in \path{results/adversarial_checks.json} reject invalid transport, missing entries, false antipodal bounds, invalid squaring signs, and inadequate resolution. Independent standard-library fraction calculations check 486 sampled inequalities; those samples supplement the full replay. Python, exact FLINT arithmetic, Arb, and the mathematical reduction remain trusted components; this is not machine-checked formal mathematics.
+
+The following complete replay program is stored inside this TeX source between the comments \texttt{BEGIN REPLAY PYTHON} and \texttt{END REPLAY PYTHON}. Copy the listing to \texttt{replay\_meissner.py}. With Python 3.12 and \texttt{python-flint==0.9.0} installed, run from the document directory:
+\begin{verbatim}
+python replay_meissner.py --rows O1,JR09
+python replay_meissner.py --rows all
+\end{verbatim}
+The first command is a partial diagnostic. The second replays all 91 chains and may take roughly a minute or longer depending on hardware; it performs no search. The retained JSON files supply the chain metadata and hashes, while the inequalities and final claimed constants are implemented below. To build the document itself, run \texttt{pdflatex MeissnerConjectureWork.tex} twice (an additional pass may be needed after changes to the contents).
+
+% BEGIN REPLAY PYTHON
+\begin{lstlisting}[language=Python]
+# Save as replay_meissner.py; run from the document directory.
+import argparse, gzip, hashlib, json, math
+from pathlib import Path
+from flint import fmpq as Q, arb, ctx
+ROWS = [
+    ('O1','3/5','3047/5000','59/125',38400,9,7922,14954),
+    ('O2','3047/5000','30549/50000','61/125',38400,9,6981,17485),
+    ('O3','30549/50000','24469/40000','123/250',38400,9,6723,17997),
+    ('O4','24469/40000','6121/10000','247/500',38400,9,6595,18245),
+    ('O5','6121/10000','24491/40000','249/500',38400,9,6315,18630),
+    ('O6','24491/40000','244937/400000','1/2',38400,9,6177,18819),
+    ('A1','244937/400000','15309/25000','5001359/10000000',38400,9,6170,18837),
+    ('A2','15309/25000','122473/200000','500213/1000000',38400,9,6165,18845),
+    ('A3','122473/200000','38273/62500','500231/1000000',38400,9,6164,18847),
+    ('A4','38273/62500','1224739/2000000','250121/500000',38400,9,6163,18848),
+    ('B1','1224739/2000000','1224741/2000000','5002481/10000000',76800,9,12326,37698),
+    ('C1','1224741/2000000','1224743/2000000','1000501/2000000',153600,9,24651,75397),
+    ('C2','1224743/2000000','3061859/5000000','2501279/5000000',153600,9,24650,75399),
+    ('D1','3061859/5000000','153093/250000','15633/31250',307200,12,49306,150800),
+    ('D2','153093/250000','3061861/5000000','1000513/2000000',307200,12,49306,150800),
+    ('D3','3061861/5000000','6123723/10000000','1250643/2500000',307200,12,49306,150801),
+    ('E1','6123723/10000000','1530931/2500000','200103/400000',614400,13,98612,301603),
+    ('E2','1530931/2500000',None,'25013/50000',614400,13,98609,301607),
+]
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+def floor(x):
+    return int(x.numerator // x.denominator)
+
+def trig(k, N):
+    return Q(N*N-k*k,N*N+k*k), Q(2*k*N,N*N+k*k)
+
+def coefficients(m,s):
+    return 2*(s*s+3*m)/(3*(s*s+m)**2), 4*s**5/(3*(s*s+m)**2)
+
+def gap(r,m,a,b):
+    return a*r**3+b-2*r**3/(r*r+m)
+
+def step_ok(x,y,m,c,s):
+    t=x*x+m; d=4*x*x-t*t; e=y*c-x
+    return d>=0 and e>0 and y*y*d*s*s<=t*t*e*e
+
+def antipodal_ok(z,r,c,s):
+    t=z+r*c
+    return t>=0 and t*t>=1-r*r*s*s
+
+def replay_row(cert):
+    name, lo, hi, st, N, dp, nv, na = cert['row']
+    r=Q(lo); m=1-Q(hi)**2 if hi else Q(5,8)
+    s0=Q(st); D=10**dp
+    require(r*r>Q(1,3) and m>=Q(5,8), 'radius domain')
+    require(r*r<=1-m and 1-r<s0<r, 'interval/tangent domain')
+    require(0<nv<N and 0<na<N, 'angular domain')
+    require(len(cert['vertex'])==nv and len(cert['antipodal'])==na,
+            'certificate lengths')
+    a,b=coefficients(m,s0)
+    require(3*a-2>0, 'positive denominator')
+    eta=1/(2*r*r)-1; tmax=4*eta*eta/(1-eta)-1
+    for n in (nv,na):
+        c,s=trig(n,N)
+        require(c*c-s*s>tmax, 'cap disjointness')
+    total=0; y=r; pc=Q(1); ps=Q(0)
+    for k,j in enumerate(cert['vertex'],1):
+        require(type(j) is int, 'integer vertex')
+        c,s=trig(k,N); cd=c*pc+s*ps; sd=s*pc-c*ps
+        require(cd>0 and sd>0 and cd*cd+sd*sd==1, 'step trig')
+        x=Q(j,D)
+        require(1-r<=x<y and x>s0, 'vertex range')
+        require(step_ok(x,y,m,cd,sd), 'invalid vertex step')
+        total+=floor((pc-c)*gap(x,m,a,b)*10**18)
+        y=x; pc,ps=c,s
+    pc=Q(1); previous=Q(0)
+    for k,j in enumerate(cert['antipodal'],1):
+        require(type(j) is int, 'integer antipodal')
+        c,s=trig(k,N); z=Q(j,D)
+        require(previous<=z<=s0 and z>=1-r, 'antipodal range')
+        require(antipodal_ok(z,r,c,s), 'invalid antipodal bound')
+        total+=floor((pc-c)*gap(z,m,a,b)*10**18)
+        previous=z; pc=c
+    delta=4*Q(total,10**18)
+    bound=(Q(2,3)-4*b+2*delta)/(3*a-2)
+    return Q(floor(bound*10**15),10**15)
+
+def baseline():
+    a,b=coefficients(Q(5,8),Q(11,24))
+    require(a==Q(461184,231361) and b==Q(161051,4164498),'analytic coefficients')
+    require((Q(2,3)-4*b)/(3*a-2)==Q(533032,4143735),'analytic baseline')
+    a,b=coefficients(Q(16,25),Q(37,80))
+    require((Q(2,3)-4*b)/(3*a-2)==Q(76439431,575385750),'case zero')
+    pi40=6*sum((Q(math.comb(2*k,k),(2*k+1)*2**(4*k+1)) for k in range(40)),Q(0))
+    require(Q(130838246407123,10**15)*pi40>Q(411040473721188,10**15),'decimal bound')
+    for i,row in enumerate(ROWS):
+        require(row[1]==('3/5' if i==0 else ROWS[i-1][2]),'partition coverage')
+    require(ROWS[-1][2] is None,'Jung coverage')
+
+def main():
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--rows',default='all')
+    args=parser.parse_args(); baseline(); ctx.prec=256
+    root=Path('results')
+    old=json.loads((root/'hyra_reconstruction_all.json').read_text())
+    ext=json.loads((root/'radius_extension.json').read_text())
+    new=json.loads((root/'radius_localization_checks.json').read_text())
+    require([t['case'] for t in old]==[r[0] for r in ROWS], '18 rows')
+    require([t['case'] for t in ext['rows']]==
+            ['X%02d'%i for i in range(63)], '63 extension rows')
+    require([t['case'] for t in new['new_rows']]==
+            ['JR%02d'%i for i in range(10)], '10 final rows')
+    targets=old+ext['rows']+new['new_rows']
+    names={t['case'] for t in targets}
+    selected=names if args.rows=='all' else set(args.rows.split(','))
+    require(bool(selected) and selected<=names, 'unknown row')
+    certificates={}; computed={}
+    for t in targets:
+        name=t['case']; raw=(root/'certificates'/(name+'.json.gz')).read_bytes()
+        require(hashlib.sha256(raw).hexdigest()==t['certificate_sha256'],
+                'hash '+name)
+        cert=json.loads(gzip.decompress(raw)); certificates[name]=cert
+        row=cert['row']; require(row[0]==name, 'row name')
+        require(row[1]==t['radius_lower'], 'lower metadata')
+        require((row[2] or 'sqrt(3/8)')==t['radius_upper'], 'upper metadata')
+        require(row[3]==t['s'] and row[4]==t['N'] and 10**row[5]==t['D']
+                and row[6]==t['nv'] and row[7]==t['na'], 'grid metadata')
+        if name in [r[0] for r in ROWS]:
+            require(row==list(next(r for r in ROWS if r[0]==name)),
+                    'Hyra row parameters')
+        if name in selected:
+            value=replay_row(cert)
+            require(value==Q(t['coefficient_pi']), 'coefficient '+name)
+            computed[name]=value
+            print(name, str(value), 'verified', flush=True)
+    lo=Q(747,1250)
+    a,b=coefficients(1-lo*lo,Q(929,2000))
+    initial=(Q(2,3)-4*b)/(3*a-2)
+    require(initial==Q(ext['analytic_coefficient_pi']), 'analytic initial')
+    for t in ext['rows']+new['new_rows']:
+        row=certificates[t['case']]['row']
+        require(Q(row[1])==lo and Q(row[2])>lo, 'gap-free coverage')
+        lo=Q(row[2])
+    require(lo==Q(60247,100000), 'final radius')
+    if args.rows!='all':
+        print('PARTIAL replay only: global coefficient not recertified.')
+        return
+    source_min=min(computed[t['case']] for t in old)
+    require(source_min==Q(130838246407125,10**15), 'Hyra minimum')
+    localized=min([initial]+[computed[t['case']]
+                  for t in ext['rows']+new['new_rows']])
+    require(localized==Q(1336460360333,10**13), 'localized minimum')
+    VM=arb.pi()/12*(8-3*arb(3).sqrt()*(arb(1)/3).acos())
+    require(arb(localized)*arb.pi()-VM>arb(Q(13590,10**10)),
+            'strict Meissner gap')
+    print('All 91 rows, coverage, and claimed bounds verified.')
+
+if __name__=='__main__':
+    main()
+\end{lstlisting}
+% END REPLAY PYTHON
+
+\section{Exact cap coefficient tables}\label{hyra:tables}
+The finite decimal radius endpoints in these tables are exact rationals. The last Hyra upper endpoint is $\RJ$. Full rational parameters and integer chains are in the named JSON artifacts.
+\subsection{The eighteen reconstructed Hyra rows}
+\begin{longtable}{@{}lrrrl@{}}
+\toprule
+Case & $R_-$ & $R_+$ & $(n_v,n_a)$ & Coefficient of $\pi$\\
+\midrule\endhead
+O1 & 0.60000000 & 0.60940000 & $(7922,14954)$ & $130983416633410/10^{15}$\\
+O2 & 0.60940000 & 0.61098000 & $(6981,17485)$ & $131065890086599/10^{15}$\\
+O3 & 0.61098000 & 0.61172500 & $(6723,17997)$ & $130935752722385/10^{15}$\\
+O4 & 0.61172500 & 0.61210000 & $(6595,18245)$ & $130869419847066/10^{15}$\\
+O5 & 0.61210000 & 0.61227500 & $(6315,18630)$ & $130845149212019/10^{15}$\\
+O6 & 0.61227500 & 0.61234250 & $(6177,18819)$ & $130838578607582/10^{15}$\\
+A1 & 0.61234250 & 0.61236000 & $(6170,18837)$ & $130839285509338/10^{15}$\\
+A2 & 0.61236000 & 0.61236500 & $(6165,18845)$ & $130839296995312/10^{15}$\\
+A3 & 0.61236500 & 0.61236800 & $(6164,18847)$ & $130838700005222/10^{15}$\\
+A4 & 0.61236800 & 0.61236950 & $(6163,18848)$ & $130838456678278/10^{15}$\\
+B1 & 0.61236950 & 0.61237050 & $(12326,37698)$ & $130838445387902/10^{15}$\\
+C1 & 0.61237050 & 0.61237150 & $(24651,75397)$ & $130838255332748/10^{15}$\\
+C2 & 0.61237150 & 0.61237180 & $(24650,75399)$ & $130838249579736/10^{15}$\\
+D1 & 0.61237180 & 0.61237200 & $(49306,150800)$ & $130838319267426/10^{15}$\\
+D2 & 0.61237200 & 0.61237220 & $(49306,150800)$ & $130838264830452/10^{15}$\\
+D3 & 0.61237220 & 0.61237230 & $(49306,150801)$ & $130838248616912/10^{15}$\\
+E1 & 0.61237230 & 0.61237240 & $(98612,301603)$ & $130838249047501/10^{15}$\\
+E2 & 0.61237240 & $R_J$ & $(98609,301607)$ & $130838246407125/10^{15}$\\
+\bottomrule
+\end{longtable}
+
+\subsection{The 63 substantial extension rows}
+\begin{longtable}{@{}lrrrl@{}}
+\toprule
+Case & $R_-$ & $R_+$ & $(n_v,n_a)$ & Coefficient of $\pi$\\
+\midrule\endhead
+X00 & 0.59760000 & 0.59770000 & $(6959,15155)$ & $135039425773036/10^{15}$\\
+X01 & 0.59770000 & 0.59780000 & $(6960,15192)$ & $135009993174949/10^{15}$\\
+X02 & 0.59780000 & 0.59790000 & $(6961,15229)$ & $134980559690264/10^{15}$\\
+X03 & 0.59790000 & 0.59800000 & $(6962,15265)$ & $134951117571728/10^{15}$\\
+X04 & 0.59800000 & 0.59810000 & $(6964,15302)$ & $134921683254950/10^{15}$\\
+X05 & 0.59810000 & 0.59820000 & $(6965,15339)$ & $134892248611281/10^{15}$\\
+X06 & 0.59820000 & 0.59830000 & $(6966,15375)$ & $134862807019297/10^{15}$\\
+X07 & 0.59830000 & 0.59840000 & $(6967,15412)$ & $134833372679916/10^{15}$\\
+X08 & 0.59840000 & 0.59850000 & $(6969,15448)$ & $134803932492068/10^{15}$\\
+X09 & 0.59850000 & 0.59860000 & $(6970,15485)$ & $134774499252650/10^{15}$\\
+X10 & 0.59860000 & 0.59870000 & $(6971,15521)$ & $134745061250231/10^{15}$\\
+X11 & 0.59870000 & 0.59880000 & $(6972,15557)$ & $134715624801703/10^{15}$\\
+X12 & 0.59880000 & 0.59890000 & $(6974,15593)$ & $134686190106539/10^{15}$\\
+X13 & 0.59890000 & 0.59900000 & $(6975,15629)$ & $134656757369033/10^{15}$\\
+X14 & 0.59900000 & 0.59910000 & $(6976,15665)$ & $134627326796532/10^{15}$\\
+X15 & 0.59910000 & 0.59920000 & $(6977,15701)$ & $134597898601274/10^{15}$\\
+X16 & 0.59920000 & 0.59930000 & $(6978,15736)$ & $134568469305334/10^{15}$\\
+X17 & 0.59930000 & 0.59940000 & $(6980,15772)$ & $134539046782225/10^{15}$\\
+X18 & 0.59940000 & 0.59950000 & $(6981,15807)$ & $134509624107173/10^{15}$\\
+X19 & 0.59950000 & 0.59960000 & $(6982,15843)$ & $134480208118253/10^{15}$\\
+X20 & 0.59960000 & 0.59970000 & $(6983,15878)$ & $134450792907375/10^{15}$\\
+X21 & 0.59970000 & 0.59980000 & $(6985,15914)$ & $134421384345446/10^{15}$\\
+X22 & 0.59980000 & 0.59990000 & $(6986,15949)$ & $134391977473033/10^{15}$\\
+X23 & 0.59990000 & 0.60000000 & $(6987,15984)$ & $134362575209277/10^{15}$\\
+X24 & 0.60000000 & 0.60010000 & $(6988,16019)$ & $134333177775777/10^{15}$\\
+X25 & 0.60010000 & 0.60020000 & $(6989,16054)$ & $134303785396496/10^{15}$\\
+X26 & 0.60020000 & 0.60030000 & $(6991,16089)$ & $134274398300746/10^{15}$\\
+X27 & 0.60030000 & 0.60040000 & $(6992,16124)$ & $134245016720332/10^{15}$\\
+X28 & 0.60040000 & 0.60050000 & $(6993,16158)$ & $134215639717626/10^{15}$\\
+X29 & 0.60050000 & 0.60060000 & $(6994,16193)$ & $134186270029566/10^{15}$\\
+X30 & 0.60060000 & 0.60070000 & $(6995,16228)$ & $134156906566652/10^{15}$\\
+X31 & 0.60070000 & 0.60080000 & $(6997,16262)$ & $134127548816977/10^{15}$\\
+X32 & 0.60080000 & 0.60090000 & $(6998,16297)$ & $134098198670011/10^{15}$\\
+X33 & 0.60090000 & 0.60100000 & $(6999,16331)$ & $134068854959788/10^{15}$\\
+X34 & 0.60100000 & 0.60110000 & $(7000,16365)$ & $134039518674414/10^{15}$\\
+X35 & 0.60110000 & 0.60120000 & $(7001,16400)$ & $134010190392861/10^{15}$\\
+X36 & 0.60120000 & 0.60130000 & $(7003,16434)$ & $133980869580443/10^{15}$\\
+X37 & 0.60130000 & 0.60140000 & $(7004,16468)$ & $133951556910746/10^{15}$\\
+X38 & 0.60140000 & 0.60150000 & $(7005,16502)$ & $133922252626662/10^{15}$\\
+X39 & 0.60150000 & 0.60160000 & $(7006,16536)$ & $133892956974754/10^{15}$\\
+X40 & 0.60160000 & 0.60170000 & $(7007,16570)$ & $133863670204869/10^{15}$\\
+X41 & 0.60170000 & 0.60180000 & $(7009,16603)$ & $133834392544035/10^{15}$\\
+X42 & 0.60180000 & 0.60190000 & $(7010,16637)$ & $133805124318484/10^{15}$\\
+X43 & 0.60190000 & 0.60200000 & $(7011,16671)$ & $133775865734889/10^{15}$\\
+X44 & 0.60200000 & 0.60210000 & $(7012,16687)$ & $133746617037055/10^{15}$\\
+X45 & 0.60210000 & 0.60220000 & $(7013,16697)$ & $133717378315503/10^{15}$\\
+X46 & 0.60220000 & 0.60230000 & $(7015,16707)$ & $133688149581979/10^{15}$\\
+X47 & 0.60230000 & 0.60231000 & $(7019,16717)$ & $133691855109849/10^{15}$\\
+X48 & 0.60231000 & 0.60232000 & $(7019,16718)$ & $133688934154424/10^{15}$\\
+X49 & 0.60232000 & 0.60233000 & $(7019,16719)$ & $133686013299492/10^{15}$\\
+X50 & 0.60233000 & 0.60234000 & $(7019,16720)$ & $133683092544680/10^{15}$\\
+X51 & 0.60234000 & 0.60235000 & $(7020,16721)$ & $133680171890073/10^{15}$\\
+X52 & 0.60235000 & 0.60236000 & $(7020,16722)$ & $133677251335492/10^{15}$\\
+X53 & 0.60236000 & 0.60237000 & $(7020,16723)$ & $133674330880791/10^{15}$\\
+X54 & 0.60237000 & 0.60238000 & $(7020,16724)$ & $133671410526443/10^{15}$\\
+X55 & 0.60238000 & 0.60239000 & $(7020,16725)$ & $133668490272175/10^{15}$\\
+X56 & 0.60239000 & 0.60240000 & $(7020,16725)$ & $133665570118749/10^{15}$\\
+X57 & 0.60240000 & 0.60241000 & $(7020,16726)$ & $133662650064321/10^{15}$\\
+X58 & 0.60241000 & 0.60242000 & $(7020,16727)$ & $133659730111107/10^{15}$\\
+X59 & 0.60242000 & 0.60243000 & $(7021,16728)$ & $133656810257618/10^{15}$\\
+X60 & 0.60243000 & 0.60244000 & $(7021,16729)$ & $133653890504958/10^{15}$\\
+X61 & 0.60244000 & 0.60245000 & $(7021,16730)$ & $133650970852085/10^{15}$\\
+X62 & 0.60245000 & 0.60246000 & $(7021,16731)$ & $133648051299230/10^{15}$\\
+\bottomrule
+\end{longtable}
+
+\subsection{The final ten resolution rows}
+\begin{longtable}{@{}lrrl@{}}\toprule
+Case & $R_-$ & $R_+$ & Coefficient of $\pi$\\\midrule\endhead
+JR00 & 0.602460 & 0.602461 & $133648663371243/10^{15}$\\
+JR01 & 0.602461 & 0.602462 & $133648371441450/10^{15}$\\
+JR02 & 0.602462 & 0.602463 & $133648079511703/10^{15}$\\
+JR03 & 0.602463 & 0.602464 & $133647787582807/10^{15}$\\
+JR04 & 0.602464 & 0.602465 & $133647495655935/10^{15}$\\
+JR05 & 0.602465 & 0.602466 & $133647203729286/10^{15}$\\
+JR06 & 0.602466 & 0.602467 & $133646911804048/10^{15}$\\
+JR07 & 0.602467 & 0.602468 & $133646619879506/10^{15}$\\
+JR08 & 0.602468 & 0.602469 & $133646327956100/10^{15}$\\
+JR09 & 0.602469 & 0.602470 & $133646036033300/10^{15}$\\
+\bottomrule\end{longtable}
+\section{Retained numerical evidence and provenance}
+Only this source, its PDF, the ignore configuration, and the numerical evidence listed below are intended for version control. Other working files remain on disk but are ignored. The support manifest records SHA-256 hashes of all retained evidence, the pinned Hyra source hashes and tree entries, the supplied Jiang manuscript hash, and the checks performed during this consolidation. Hashes establish artifact identity, not mathematical validity.
+\begin{longtable}{p{.45\linewidth}p{.49\linewidth}}\toprule
+Artifact under \texttt{results/} & Purpose and qualification\\\midrule\endhead
+\path{certificates/*.json.gz} & 91 integer-chain certificates: 18 Hyra, 63 extension, ten final radius slabs.\\
+\path{hyra_reconstruction_all.json}, \path{hyra_replay_all.json} & Exact reconstructed coefficients, metadata, hashes, and historical original-row replay.\\
+\path{radius_extension.json}, \path{radius_localization_checks.json} & Radius partitions, uniform minima, interval comparisons, and separately marked floating continuum diagnostics.\\
+\path{verification_summary.json}, \path{adversarial_checks.json}, \path{analytic_checks.json} & Historical complete replay, rejection tests, independent fraction checks, and symbolic/scalar checks.\\
+\path{deficit_benchmarks.json} & Smooth-body floating consistency checks for the exact joint-deficit identity.\\
+\path{jiang_continuation_checks.json}, \path{jung_repair_checks.json} & Exact spectral/centroid identities and interval repair constants; selected Jiang scalar checks, not an audit of his entire proof.\\
+\path{cell_stability_checks.json}, \path{cell_bump_certificate.json.gz} & Certified finite-amplitude admissibility and ratio bounds, plus separately marked floating quadrature.\\
+\path{product_radius_identities.json}, \path{product_radius_hessian.json} & Symbolic pair identities and floating joint-ascent evidence on saved configurations.\\
+\path{product_critical_configurations.json} & Coordinates of all 26 input arrays, original array hashes, and status of the one infeasible input; portable numerical input, not a catalogue completeness claim.\\
+\path{triangular_star_checks.json} & Saved interval partition and two-precision sign checks for the symmetric seven-point family; floating general-star Hessians.\\
+\path{many_neighbor_star_checks.json}, \path{many_neighbor_star_certificate.json.gz} & 13,456-box continuous-domain certificate for all odd $k\geq5$, tree/area coverage, and independent floating geometric checks.\\
+\path{hynd_flow_checks.json} & Interval dissipation constants and floating square-cell midpoint quadrature; no time integration or backward existence assertion.\\
+\path{environment.json}, \path{main_support_manifest.json} & Computational environment, artifact inventory, source provenance, and consolidation validation.\\\bottomrule
+\end{longtable}
+The cell and star certificate partitions are finite coverings of continuous parameter domains, not samples of those domains. Their analytic formulas and enclosure rules are given in the corresponding sections; their JSON records identify precisions and acceptance margins. For the floating configuration audit, tolerances and witnessed gains must not be read as interval proofs.
+
+\section{References and relation to the literature}
+Jung's theorem and standard convex geometry underlie the radius formulation \cite{Jung,Schneider}. The support-function energy and the local minimization problem have substantial precedents \cite{Bayen,AnciauxGuilfoyle}. Bodies of revolution provide useful comparison examples \cite{AnciauxGeorgiou}; small volume and tetrahedral symmetry alone do not prove the conjecture \cite{Arman}. Earlier lower-bound work includes Chakerian and recent spectral/dual work \cite{Chakerian,Nishioka}. Finite Meissner constructions and their density are developed in \cite{Montejano,HyndDensity}; extremality questions are also treated in \cite{HyndExtreme}.
+The references to Jiang use the supplied seventeen-page manuscript, identified by hash in the manifest. No public publication identifier is inferred. Its universal $0.41275$ theorem is reported with attribution; the partial scalar audit here is not an independent verification of all of that theorem's geometry.
+\begin{thebibliography}{99}
+\bibitem{Hyra} Hyra, \emph{A certified geometric lower bound for the three-dimensional Blaschke--Lebesgue problem}, 15 August 2026. Pinned repository snapshot, commit \texttt{09b2d2e3c362c67a78f544c836bd8e4b54a05527}. \url{https://github.com/Tencent-Hunyuan/Hyra-results/tree/09b2d2e3c362c67a78f544c836bd8e4b54a05527/AI4Science/3d_blaschke_lebesgue}.
+\bibitem{Jiang} Y. Jiang, \emph{A 0.41275 Lower Bound for the Three-Dimensional Blaschke--Lebesgue Problem}, supplied unpublished manuscript, 2026, 17 pp.; supplied filename \path{Blaschke_Lebesgue_ANALYTIC_FINAL.pdf}.
+\bibitem{BogoselVolume} B. Bogosel, \emph{Volume computation for Meissner polyhedra and applications}, Discrete Comput. Geom. 75 (2026), 48--72. \href{https://doi.org/10.1007/s00454-024-00688-0}{doi:10.1007/s00454-024-00688-0}; \href{https://arxiv.org/abs/2310.17672}{arXiv:2310.17672}.
+\bibitem{BogoselDangling} B. Bogosel, \emph{Dangling points in area-minimizing Meissner polyhedra}, 2026. \href{https://arxiv.org/abs/2608.19747}{arXiv:2608.19747}.
+\bibitem{BogoselGraphs} B. Bogosel, \emph{Isoperimetric problems related to extremal diameter graphs in 3D: theoretical and numerical aspects}, 2026. \href{https://arxiv.org/abs/2608.26395}{arXiv:2608.26395}.
+\bibitem{HyndDensity} R. Hynd, \emph{The density of Meissner polyhedra}, Geom. Dedicata 218 (2024), article 89. \href{https://doi.org/10.1007/s10711-024-00933-z}{doi:10.1007/s10711-024-00933-z}; \href{https://arxiv.org/abs/2304.04035}{arXiv:2304.04035}.
+\bibitem{HyndFlow} R. Hynd, \emph{A doubly monotone flow for constant width bodies in $\mathbb R^3$}, Contemp. Math. 781 (2023), 49--101. \href{https://doi.org/10.1090/conm/781/15709}{doi:10.1090/conm/781/15709}; \href{https://arxiv.org/abs/2109.06962}{arXiv:2109.06962}.
+\bibitem{HyndExtreme} R. Hynd, \emph{On extreme constant width bodies in $\mathbb R^3$}, Discrete Comput. Geom. 76 (2026), 838--865. \href{https://doi.org/10.1007/s00454-025-00779-6}{doi:10.1007/s00454-025-00779-6}; \href{https://arxiv.org/abs/2501.16940}{arXiv:2501.16940}.
+\bibitem{Montejano} L. Montejano and E. Roldan-Pensado, \emph{Meissner polyhedra}, Acta Math. Hungar. 151 (2017), 482--494. \href{https://doi.org/10.1007/s10474-017-0697-3}{doi:10.1007/s10474-017-0697-3}.
+\bibitem{AnciauxGeorgiou} H. Anciaux and N. Georgiou, \emph{The Blaschke--Lebesgue problem for constant width bodies of revolution}, \href{https://arxiv.org/abs/0903.4284}{arXiv:0903.4284}.
+\bibitem{AnciauxGuilfoyle} H. Anciaux and B. Guilfoyle, \emph{On the three-dimensional Blaschke--Lebesgue problem}, Proc. Amer. Math. Soc. 139 (2011), 1831--1839. \href{https://doi.org/10.1090/S0002-9939-2010-10588-9}{doi:10.1090/S0002-9939-2010-10588-9}.
+\bibitem{Bayen} T. Bayen, T. Lachand-Robert and E. Oudet, \emph{Analytic parametrization of three-dimensional bodies of constant width}, Arch. Ration. Mech. Anal. 186 (2007), 225--249. \href{https://doi.org/10.1007/s00205-007-0060-x}{doi:10.1007/s00205-007-0060-x}.
+\bibitem{Arman} A. Arman, A. Bondarenko, A. Prymak and D. Radchenko, \emph{Small volume bodies of constant width with tetrahedral symmetries}, SIGMA 21 (2025), 109. \href{https://doi.org/10.3842/SIGMA.2025.109}{doi:10.3842/SIGMA.2025.109}; \href{https://arxiv.org/abs/2406.18428}{arXiv:2406.18428}.
+\bibitem{Chakerian} G. D. Chakerian, \emph{Sets of constant width}, Pacific J. Math. 19 (1966), 13--21.
+\bibitem{Nishioka} A. Nishioka, \emph{An improved lower bound for the three-dimensional Blaschke--Lebesgue problem from spectral and dual perspectives}, 2026, \href{https://arxiv.org/abs/2606.01754}{arXiv:2606.01754}; J. Math. Anal. Appl., article 131038, \href{https://doi.org/10.1016/j.jmaa.2026.131038}{doi:10.1016/j.jmaa.2026.131038}.
+\bibitem{Jung} H. W. E. Jung, \emph{Uber die kleinste Kugel, die eine raumliche Figur einschliesst}, J. Reine Angew. Math. 123 (1901), 241--257.
+\bibitem{Schneider} R. Schneider, \emph{Convex Bodies: The Brunn--Minkowski Theory}, second expanded edition, Cambridge University Press, 2014.
+\bibitem{Local} B. Bogosel and project research working notes, unpublished, 2026: fixed-base cell geometry, critical product configurations, and subsequent Codex-assisted continuation. The local filenames were \path{GeometricInvariants.tex}, \path{FurtherBoundsAndCriticalGeometry.tex}, and the NonWheel research handoff. Relevant arguments and numerical inputs are consolidated in the present document and retained evidence package; these notes are not asserted to be published literature.
+\end{thebibliography}
+\end{document}
